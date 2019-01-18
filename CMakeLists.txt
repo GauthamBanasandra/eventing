@@ -6,4 +6,4 @@ ADD_SUBDIRECTORY(third_party/inspector)
 ADD_SUBDIRECTORY(v8_consumer)
 ADD_SUBDIRECTORY(producer)
 ADD_SUBDIRECTORY(ui)
-
+ADD_SUBDIRECTORY(n1ql-functions/evaluator)
