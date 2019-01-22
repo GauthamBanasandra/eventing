@@ -21,9 +21,10 @@ grpc::Status EvaluatorServer::Initialize(grpc::ServerContext *context,
 
 void EvaluatorServer::Run(const std::string &hostname) {
   grpc::ServerBuilder builder;
-  builder.AddListeningPort(hostname, grpc::InsecureServerCredentials());
+  int selected_port = 0;
+  builder.AddListeningPort(hostname, grpc::InsecureServerCredentials(), &selected_port);
   builder.RegisterService(this);
   std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-  std::cout << "Server listening on " << hostname << std::endl;
+  std::cout << "Server listening on " << selected_port << std::endl;
   server->Wait();
 }

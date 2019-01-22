@@ -2,12 +2,17 @@ package client
 
 import (
 	"github.com/couchbase/eventing/gen/nftp/client"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
-	"golang.org/x/net/context"
+	"time"
 )
 
 type Evaluator struct {
+	Babysitter         *babysitter.Babysitter
+	NotificationServer *notificationServer
+
 	config          Configuration
 	connection      *grpc.ClientConn
 	evaluatorClient nftp.EvaluatorClient
@@ -23,13 +28,30 @@ type Configuration struct {
 
 func (c *Configuration) ToNftp() *nftp.Config {
 	return &nftp.Config{
-		WorkersPerNode: c.WorkersPerNode,
+		WorkersPerNode:   c.WorkersPerNode,
 		ThreadsPerWorker: c.ThreadsPerWorker,
-		NsServerUrl: c.NsServerUrl,
+		NsServerUrl:      c.NsServerUrl,
 	}
 }
 
 func NewEvaluator(config Configuration) (*Evaluator, error) {
+	notificationServerInstance, err := NewNotificationServer()
+	if err != nil {
+		return nil, err
+	}
+	port, err := notificationServerInstance.Port()
+	if err != nil {
+		return nil, err
+	}
+
+	babysitterInstance, err := babysitter.NewBabysitter(port)
+	if err != nil {
+		return nil, err
+	}
+	babysitterInstance.AddEvaluator()
+
+	time.Sleep(1 * time.Second)
+
 	var options []grpc.DialOption
 	options = append(options, grpc.WithInsecure())
 
@@ -47,9 +69,11 @@ func NewEvaluator(config Configuration) (*Evaluator, error) {
 	log.Printf("Reponse : %v", response)
 
 	evaluator := &Evaluator{
-		config: config,
-		connection: connection,
-		evaluatorClient: evaluatorClient,
+		Babysitter:         babysitterInstance,
+		NotificationServer: notificationServerInstance,
+		config:             config,
+		connection:         connection,
+		evaluatorClient:    evaluatorClient,
 	}
 	return evaluator, nil
 }

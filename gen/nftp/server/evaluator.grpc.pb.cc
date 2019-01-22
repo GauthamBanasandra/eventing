@@ -18,6 +18,55 @@
 #include <grpcpp/impl/codegen/sync_stream.h>
 namespace nftp {
 
+static const char* Notification_method_names[] = {
+  "/nftp.Notification/NotifyPort",
+};
+
+std::unique_ptr< Notification::Stub> Notification::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+  (void)options;
+  std::unique_ptr< Notification::Stub> stub(new Notification::Stub(channel));
+  return stub;
+}
+
+Notification::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
+  : channel_(channel), rpcmethod_NotifyPort_(Notification_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  {}
+
+::grpc::Status Notification::Stub::NotifyPort(::grpc::ClientContext* context, const ::nftp::Port& request, ::nftp::Void* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_NotifyPort_, context, request, response);
+}
+
+void Notification::Stub::experimental_async::NotifyPort(::grpc::ClientContext* context, const ::nftp::Port* request, ::nftp::Void* response, std::function<void(::grpc::Status)> f) {
+  return ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_NotifyPort_, context, request, response, std::move(f));
+}
+
+::grpc::ClientAsyncResponseReader< ::nftp::Void>* Notification::Stub::AsyncNotifyPortRaw(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::nftp::Void>::Create(channel_.get(), cq, rpcmethod_NotifyPort_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::nftp::Void>* Notification::Stub::PrepareAsyncNotifyPortRaw(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::nftp::Void>::Create(channel_.get(), cq, rpcmethod_NotifyPort_, context, request, false);
+}
+
+Notification::Service::Service() {
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      Notification_method_names[0],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< Notification::Service, ::nftp::Port, ::nftp::Void>(
+          std::mem_fn(&Notification::Service::NotifyPort), this)));
+}
+
+Notification::Service::~Service() {
+}
+
+::grpc::Status Notification::Service::NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+
 static const char* Evaluator_method_names[] = {
   "/nftp.Evaluator/Initialize",
 };

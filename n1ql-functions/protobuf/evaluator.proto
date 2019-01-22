@@ -13,6 +13,18 @@ message Info {
     string Message = 2;
 }
 
+message Void {
+}
+
+message Port {
+    string EvaluatorId = 1;
+    uint32 Port = 2;
+}
+
+service Notification {
+    rpc NotifyPort (Port) returns (Void);
+}
+
 service Evaluator {
     rpc Initialize (Config) returns (Info);
 }

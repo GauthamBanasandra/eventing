@@ -38,7 +38,7 @@ namespace protobuf_evaluator_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[2];
+  static const ::google::protobuf::internal::ParseTable schema[4];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -52,11 +52,19 @@ extern ConfigDefaultTypeInternal _Config_default_instance_;
 class Info;
 class InfoDefaultTypeInternal;
 extern InfoDefaultTypeInternal _Info_default_instance_;
+class Port;
+class PortDefaultTypeInternal;
+extern PortDefaultTypeInternal _Port_default_instance_;
+class Void;
+class VoidDefaultTypeInternal;
+extern VoidDefaultTypeInternal _Void_default_instance_;
 }  // namespace nftp
 namespace google {
 namespace protobuf {
 template<> ::nftp::Config* Arena::CreateMaybeMessage<::nftp::Config>(Arena*);
 template<> ::nftp::Info* Arena::CreateMaybeMessage<::nftp::Info>(Arena*);
+template<> ::nftp::Port* Arena::CreateMaybeMessage<::nftp::Port>(Arena*);
+template<> ::nftp::Void* Arena::CreateMaybeMessage<::nftp::Void>(Arena*);
 }  // namespace protobuf
 }  // namespace google
 namespace nftp {
@@ -304,6 +312,220 @@ class Info : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_evaluator_2eproto::TableStruct;
 };
+// -------------------------------------------------------------------
+
+class Void : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:nftp.Void) */ {
+ public:
+  Void();
+  virtual ~Void();
+
+  Void(const Void& from);
+
+  inline Void& operator=(const Void& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Void(Void&& from) noexcept
+    : Void() {
+    *this = ::std::move(from);
+  }
+
+  inline Void& operator=(Void&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Void& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Void* internal_default_instance() {
+    return reinterpret_cast<const Void*>(
+               &_Void_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  void Swap(Void* other);
+  friend void swap(Void& a, Void& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Void* New() const final {
+    return CreateMaybeMessage<Void>(NULL);
+  }
+
+  Void* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Void>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Void& from);
+  void MergeFrom(const Void& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Void* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:nftp.Void)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_evaluator_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Port : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:nftp.Port) */ {
+ public:
+  Port();
+  virtual ~Port();
+
+  Port(const Port& from);
+
+  inline Port& operator=(const Port& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Port(Port&& from) noexcept
+    : Port() {
+    *this = ::std::move(from);
+  }
+
+  inline Port& operator=(Port&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Port& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Port* internal_default_instance() {
+    return reinterpret_cast<const Port*>(
+               &_Port_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  void Swap(Port* other);
+  friend void swap(Port& a, Port& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Port* New() const final {
+    return CreateMaybeMessage<Port>(NULL);
+  }
+
+  Port* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Port>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Port& from);
+  void MergeFrom(const Port& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Port* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // string EvaluatorId = 1;
+  void clear_evaluatorid();
+  static const int kEvaluatorIdFieldNumber = 1;
+  const ::std::string& evaluatorid() const;
+  void set_evaluatorid(const ::std::string& value);
+  #if LANG_CXX11
+  void set_evaluatorid(::std::string&& value);
+  #endif
+  void set_evaluatorid(const char* value);
+  void set_evaluatorid(const char* value, size_t size);
+  ::std::string* mutable_evaluatorid();
+  ::std::string* release_evaluatorid();
+  void set_allocated_evaluatorid(::std::string* evaluatorid);
+
+  // uint32 Port = 2;
+  void clear_port();
+  static const int kPortFieldNumber = 2;
+  ::google::protobuf::uint32 port() const;
+  void set_port(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:nftp.Port)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr evaluatorid_;
+  ::google::protobuf::uint32 port_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_evaluator_2eproto::TableStruct;
+};
 // ===================================================================
 
 
@@ -467,9 +689,88 @@ inline void Info::set_allocated_message(::std::string* message) {
   // @@protoc_insertion_point(field_set_allocated:nftp.Info.Message)
 }
 
+// -------------------------------------------------------------------
+
+// Void
+
+// -------------------------------------------------------------------
+
+// Port
+
+// string EvaluatorId = 1;
+inline void Port::clear_evaluatorid() {
+  evaluatorid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Port::evaluatorid() const {
+  // @@protoc_insertion_point(field_get:nftp.Port.EvaluatorId)
+  return evaluatorid_.GetNoArena();
+}
+inline void Port::set_evaluatorid(const ::std::string& value) {
+  
+  evaluatorid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:nftp.Port.EvaluatorId)
+}
+#if LANG_CXX11
+inline void Port::set_evaluatorid(::std::string&& value) {
+  
+  evaluatorid_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:nftp.Port.EvaluatorId)
+}
+#endif
+inline void Port::set_evaluatorid(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  evaluatorid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:nftp.Port.EvaluatorId)
+}
+inline void Port::set_evaluatorid(const char* value, size_t size) {
+  
+  evaluatorid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:nftp.Port.EvaluatorId)
+}
+inline ::std::string* Port::mutable_evaluatorid() {
+  
+  // @@protoc_insertion_point(field_mutable:nftp.Port.EvaluatorId)
+  return evaluatorid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Port::release_evaluatorid() {
+  // @@protoc_insertion_point(field_release:nftp.Port.EvaluatorId)
+  
+  return evaluatorid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Port::set_allocated_evaluatorid(::std::string* evaluatorid) {
+  if (evaluatorid != NULL) {
+    
+  } else {
+    
+  }
+  evaluatorid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), evaluatorid);
+  // @@protoc_insertion_point(field_set_allocated:nftp.Port.EvaluatorId)
+}
+
+// uint32 Port = 2;
+inline void Port::clear_port() {
+  port_ = 0u;
+}
+inline ::google::protobuf::uint32 Port::port() const {
+  // @@protoc_insertion_point(field_get:nftp.Port.Port)
+  return port_;
+}
+inline void Port::set_port(::google::protobuf::uint32 value) {
+  
+  port_ = value;
+  // @@protoc_insertion_point(field_set:nftp.Port.Port)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 
