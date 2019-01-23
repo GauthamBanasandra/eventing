@@ -11,25 +11,25 @@ type Babysitter struct {
 	evaluators       []*process.Process
 }
 
-func NewBabysitter(notificationPort string) (*Babysitter, error) {
+func New(notificationPort string) (*Babysitter, error) {
 	return &Babysitter{
 		notificationPort: notificationPort,
 	}, nil
 }
 
-func (b *Babysitter) AddEvaluator() error {
+func (b *Babysitter) AddEvaluator() (string, error) {
 	evaluator, err := process.NewProcess(evaluatorPath, []string{b.notificationPort})
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	b.evaluators = append(b.evaluators, evaluator)
-	return nil
+	return "0", nil
 }
 
 func (b *Babysitter) AddEvaluators(num uint32) error {
 	for i := uint32(0); i < num; i++ {
-		err := b.AddEvaluator()
+		_, err := b.AddEvaluator()
 		if err != nil {
 			return err
 		}

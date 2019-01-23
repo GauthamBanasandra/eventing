@@ -5,15 +5,23 @@
 #ifndef EVALUATOR_SERVICE_H
 #define EVALUATOR_SERVICE_H
 
+#include <grpc++/grpc++.h>
+#include <memory>
 #include <string>
-#include <grpcpp/grpcpp.h>
 
 #include "evaluator.grpc.pb.h"
 
 class EvaluatorServer final : public nftp::Evaluator::Service {
- public:
-  grpc::Status Initialize(grpc::ServerContext *context, const nftp::Config *request, nftp::Info *response) override;
+public:
+  explicit EvaluatorServer(const std::string &notification_port);
+
+  grpc::Status Initialize(grpc::ServerContext *context,
+                          const nftp::Config *request,
+                          nftp::Info *response) override;
   void Run(const std::string &hostname);
+
+private:
+  std::unique_ptr<nftp::Notification::Stub> notification_client_;
 };
 
-#endif //EVALUATOR_SERVICE_H
+#endif // EVALUATOR_SERVICE_H

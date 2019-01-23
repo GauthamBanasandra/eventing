@@ -6,15 +6,11 @@
 
 #include "evaluator.pb.h"
 
-#include <functional>
-#include <grpcpp/impl/codegen/async_generic_service.h>
 #include <grpcpp/impl/codegen/async_stream.h>
 #include <grpcpp/impl/codegen/async_unary_call.h>
-#include <grpcpp/impl/codegen/client_callback.h>
 #include <grpcpp/impl/codegen/method_handler_impl.h>
 #include <grpcpp/impl/codegen/proto_utils.h>
 #include <grpcpp/impl/codegen/rpc_method.h>
-#include <grpcpp/impl/codegen/server_callback.h>
 #include <grpcpp/impl/codegen/service_type.h>
 #include <grpcpp/impl/codegen/status.h>
 #include <grpcpp/impl/codegen/stub_options.h>
@@ -44,12 +40,6 @@ class Notification final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Void>> PrepareAsyncNotifyPort(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Void>>(PrepareAsyncNotifyPortRaw(context, request, cq));
     }
-    class experimental_async_interface {
-     public:
-      virtual ~experimental_async_interface() {}
-      virtual void NotifyPort(::grpc::ClientContext* context, const ::nftp::Port* request, ::nftp::Void* response, std::function<void(::grpc::Status)>) = 0;
-    };
-    virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Void>* AsyncNotifyPortRaw(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Void>* PrepareAsyncNotifyPortRaw(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) = 0;
@@ -64,21 +54,9 @@ class Notification final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Void>> PrepareAsyncNotifyPort(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Void>>(PrepareAsyncNotifyPortRaw(context, request, cq));
     }
-    class experimental_async final :
-      public StubInterface::experimental_async_interface {
-     public:
-      void NotifyPort(::grpc::ClientContext* context, const ::nftp::Port* request, ::nftp::Void* response, std::function<void(::grpc::Status)>) override;
-     private:
-      friend class Stub;
-      explicit experimental_async(Stub* stub): stub_(stub) { }
-      Stub* stub() { return stub_; }
-      Stub* stub_;
-    };
-    class experimental_async_interface* experimental_async() override { return &async_stub_; }
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
-    class experimental_async async_stub_{this};
     ::grpc::ClientAsyncResponseReader< ::nftp::Void>* AsyncNotifyPortRaw(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::nftp::Void>* PrepareAsyncNotifyPortRaw(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_NotifyPort_;
@@ -103,7 +81,7 @@ class Notification final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) override {
+    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -112,32 +90,6 @@ class Notification final {
     }
   };
   typedef WithAsyncMethod_NotifyPort<Service > AsyncService;
-  template <class BaseClass>
-  class ExperimentalWithCallbackMethod_NotifyPort : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service *service) {}
-   public:
-    ExperimentalWithCallbackMethod_NotifyPort() {
-      ::grpc::Service::experimental().MarkMethodCallback(0,
-        new ::grpc::internal::CallbackUnaryHandler< ::nftp::Port, ::nftp::Void>(
-          [this](::grpc::ServerContext* context,
-                 const ::nftp::Port* request,
-                 ::nftp::Void* response,
-                 ::grpc::experimental::ServerCallbackRpcController* controller) {
-                   return this->NotifyPort(context, request, response, controller);
-                 }));
-    }
-    ~ExperimentalWithCallbackMethod_NotifyPort() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual void NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
-  };
-  typedef ExperimentalWithCallbackMethod_NotifyPort<Service > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_NotifyPort : public BaseClass {
    private:
@@ -150,55 +102,10 @@ class Notification final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) override {
+    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-  };
-  template <class BaseClass>
-  class WithRawMethod_NotifyPort : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service *service) {}
-   public:
-    WithRawMethod_NotifyPort() {
-      ::grpc::Service::MarkMethodRaw(0);
-    }
-    ~WithRawMethod_NotifyPort() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestNotifyPort(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class ExperimentalWithRawCallbackMethod_NotifyPort : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service *service) {}
-   public:
-    ExperimentalWithRawCallbackMethod_NotifyPort() {
-      ::grpc::Service::experimental().MarkMethodRawCallback(0,
-        new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-          [this](::grpc::ServerContext* context,
-                 const ::grpc::ByteBuffer* request,
-                 ::grpc::ByteBuffer* response,
-                 ::grpc::experimental::ServerCallbackRpcController* controller) {
-                   this->NotifyPort(context, request, response, controller);
-                 }));
-    }
-    ~ExperimentalWithRawCallbackMethod_NotifyPort() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual void NotifyPort(::grpc::ServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_NotifyPort : public BaseClass {
@@ -213,7 +120,7 @@ class Notification final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) override {
+    ::grpc::Status NotifyPort(::grpc::ServerContext* context, const ::nftp::Port* request, ::nftp::Void* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -240,12 +147,6 @@ class Evaluator final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>> PrepareAsyncInitialize(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>>(PrepareAsyncInitializeRaw(context, request, cq));
     }
-    class experimental_async_interface {
-     public:
-      virtual ~experimental_async_interface() {}
-      virtual void Initialize(::grpc::ClientContext* context, const ::nftp::Config* request, ::nftp::Info* response, std::function<void(::grpc::Status)>) = 0;
-    };
-    virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* AsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* PrepareAsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) = 0;
@@ -260,21 +161,9 @@ class Evaluator final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>> PrepareAsyncInitialize(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>>(PrepareAsyncInitializeRaw(context, request, cq));
     }
-    class experimental_async final :
-      public StubInterface::experimental_async_interface {
-     public:
-      void Initialize(::grpc::ClientContext* context, const ::nftp::Config* request, ::nftp::Info* response, std::function<void(::grpc::Status)>) override;
-     private:
-      friend class Stub;
-      explicit experimental_async(Stub* stub): stub_(stub) { }
-      Stub* stub() { return stub_; }
-      Stub* stub_;
-    };
-    class experimental_async_interface* experimental_async() override { return &async_stub_; }
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
-    class experimental_async async_stub_{this};
     ::grpc::ClientAsyncResponseReader< ::nftp::Info>* AsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::nftp::Info>* PrepareAsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Initialize_;
@@ -299,7 +188,7 @@ class Evaluator final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) override {
+    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -308,32 +197,6 @@ class Evaluator final {
     }
   };
   typedef WithAsyncMethod_Initialize<Service > AsyncService;
-  template <class BaseClass>
-  class ExperimentalWithCallbackMethod_Initialize : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service *service) {}
-   public:
-    ExperimentalWithCallbackMethod_Initialize() {
-      ::grpc::Service::experimental().MarkMethodCallback(0,
-        new ::grpc::internal::CallbackUnaryHandler< ::nftp::Config, ::nftp::Info>(
-          [this](::grpc::ServerContext* context,
-                 const ::nftp::Config* request,
-                 ::nftp::Info* response,
-                 ::grpc::experimental::ServerCallbackRpcController* controller) {
-                   return this->Initialize(context, request, response, controller);
-                 }));
-    }
-    ~ExperimentalWithCallbackMethod_Initialize() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual void Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
-  };
-  typedef ExperimentalWithCallbackMethod_Initialize<Service > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_Initialize : public BaseClass {
    private:
@@ -346,55 +209,10 @@ class Evaluator final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) override {
+    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-  };
-  template <class BaseClass>
-  class WithRawMethod_Initialize : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service *service) {}
-   public:
-    WithRawMethod_Initialize() {
-      ::grpc::Service::MarkMethodRaw(0);
-    }
-    ~WithRawMethod_Initialize() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void RequestInitialize(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class ExperimentalWithRawCallbackMethod_Initialize : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service *service) {}
-   public:
-    ExperimentalWithRawCallbackMethod_Initialize() {
-      ::grpc::Service::experimental().MarkMethodRawCallback(0,
-        new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-          [this](::grpc::ServerContext* context,
-                 const ::grpc::ByteBuffer* request,
-                 ::grpc::ByteBuffer* response,
-                 ::grpc::experimental::ServerCallbackRpcController* controller) {
-                   this->Initialize(context, request, response, controller);
-                 }));
-    }
-    ~ExperimentalWithRawCallbackMethod_Initialize() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    virtual void Initialize(::grpc::ServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_Initialize : public BaseClass {
@@ -409,7 +227,7 @@ class Evaluator final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) override {
+    ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }

@@ -4,13 +4,25 @@ import (
 	"context"
 	"github.com/couchbase/eventing/gen/nftp/client"
 	"google.golang.org/grpc"
-	"log"
 	"net"
 )
 
+type portNotification struct {
+	evaluatorPort map[string]uint32
+	notification  chan struct{}
+}
+
+func newPortNotification() *portNotification {
+	return &portNotification{
+		evaluatorPort: make(map[string]uint32),
+		notification:  make(chan struct{}),
+	}
+}
+
 type notificationServer struct {
-	handle net.Listener
-	stop   chan struct{}
+	handle      net.Listener
+	stop        chan struct{}
+	portHandler *portNotification
 }
 
 func NewNotificationServer() (*notificationServer, error) {
@@ -19,19 +31,18 @@ func NewNotificationServer() (*notificationServer, error) {
 		return nil, err
 	}
 
-	server := grpc.NewServer()
-	nftp.RegisterNotificationServer(server, &notificationServer{
-		handle: handle,
-	})
-
-	notificationServerInstance := &notificationServer{
-		handle: handle,
-		stop:   make(chan struct{}),
+	serverInstance := &notificationServer{
+		handle:      handle,
+		stop:        make(chan struct{}),
+		portHandler: newPortNotification(),
 	}
 
+	server := grpc.NewServer()
+	nftp.RegisterNotificationServer(server, serverInstance)
+
 	go server.Serve(handle)
-	go notificationServerInstance.controller()
-	return notificationServerInstance, nil
+	go serverInstance.controller()
+	return serverInstance, nil
 }
 
 func (n *notificationServer) Close() error {
@@ -47,7 +58,8 @@ func (n *notificationServer) Port() (string, error) {
 }
 
 func (n *notificationServer) NotifyPort(ctx context.Context, port *nftp.Port) (*nftp.Void, error) {
-	log.Printf("Received port %v for evaluator %v", port.Port, port.EvaluatorId)
+	n.portHandler.evaluatorPort[port.EvaluatorId] = port.Port
+	n.portHandler.notification <- struct{}{}
 	return &nftp.Void{}, nil
 }
 
@@ -58,5 +70,14 @@ func (n *notificationServer) controller() {
 			n.handle.Close()
 			return
 		}
+	}
+}
+
+func (n *notificationServer) WaitForEvaluatorPort(evaluatorId string) uint32 {
+	for {
+		if port, exists := n.portHandler.evaluatorPort[evaluatorId]; exists {
+			return port
+		}
+		<-n.portHandler.notification
 	}
 }

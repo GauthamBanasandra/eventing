@@ -1,82 +1,100 @@
 package client
 
 import (
+	"errors"
+	"fmt"
 	"github.com/couchbase/eventing/gen/nftp/client"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
-	"time"
 )
 
 type Evaluator struct {
 	Babysitter         *babysitter.Babysitter
 	NotificationServer *notificationServer
 
-	config          Configuration
-	connection      *grpc.ClientConn
-	evaluatorClient nftp.EvaluatorClient
+	config     Configuration
+	connection *grpc.ClientConn
+	client     nftp.EvaluatorClient
 }
 
-type Configuration struct {
-	WorkersPerNode   uint32
-	ThreadsPerWorker uint32
-	NsServerUrl      string
-	HttpPort         string
-	DebuggerPort     string
+func (e *Evaluator) spawnComponents() error {
+	var err error
+	e.NotificationServer, err = NewNotificationServer()
+	if err != nil {
+		return err
+	}
+
+	notificationPort, err := e.NotificationServer.Port()
+	if err != nil {
+		return err
+	}
+
+	e.Babysitter, err = babysitter.New(notificationPort)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (c *Configuration) ToNftp() *nftp.Config {
-	return &nftp.Config{
-		WorkersPerNode:   c.WorkersPerNode,
-		ThreadsPerWorker: c.ThreadsPerWorker,
-		NsServerUrl:      c.NsServerUrl,
+func (e *Evaluator) spawnEvaluators() error {
+	if e.Babysitter == nil {
+		return errors.New("Babysitter is not initialized")
 	}
+	if e.NotificationServer == nil {
+		return errors.New("NotificationServer is not initialized")
+	}
+
+	evaluatorId, err := e.Babysitter.AddEvaluator()
+	if err != nil {
+		return err
+	}
+
+	port := e.NotificationServer.WaitForEvaluatorPort(evaluatorId)
+
+	if err := e.initializeConnection(port); err != nil {
+		return err
+	}
+
+	e.client = nftp.NewEvaluatorClient(e.connection)
+	return nil
 }
 
-func NewEvaluator(config Configuration) (*Evaluator, error) {
-	notificationServerInstance, err := NewNotificationServer()
-	if err != nil {
-		return nil, err
-	}
-	port, err := notificationServerInstance.Port()
-	if err != nil {
-		return nil, err
-	}
-
-	babysitterInstance, err := babysitter.NewBabysitter(port)
-	if err != nil {
-		return nil, err
-	}
-	babysitterInstance.AddEvaluator()
-
-	time.Sleep(1 * time.Second)
-
+func (e *Evaluator) initializeConnection(port uint32) error {
+	var err error
 	var options []grpc.DialOption
 	options = append(options, grpc.WithInsecure())
 
-	connection, err := grpc.Dial("127.0.0.1:9090", options...)
+	e.connection, err = grpc.Dial(fmt.Sprintf("127.0.0.1:%v", port), options...)
 	if err != nil {
-		log.Fatalf("Unable to connect to server : %v", err)
+		return err
 	}
+	return nil
+}
 
-	evaluatorClient := nftp.NewEvaluatorClient(connection)
-	response, err := evaluatorClient.Initialize(context.Background(), config.ToNftp())
-	if err != nil {
+func NewEvaluator(config Configuration) (*Evaluator, error) {
+	evaluator := &Evaluator{
+		config: config,
+	}
+	if err := evaluator.spawnComponents(); err != nil {
+		return nil, err
+	}
+	if err := evaluator.spawnEvaluators(); err != nil {
 		return nil, err
 	}
 
+	response, err := evaluator.client.Initialize(context.Background(), config.ToNftp())
+	if err != nil {
+		return nil, err
+	}
 	log.Printf("Reponse : %v", response)
 
-	evaluator := &Evaluator{
-		Babysitter:         babysitterInstance,
-		NotificationServer: notificationServerInstance,
-		config:             config,
-		connection:         connection,
-		evaluatorClient:    evaluatorClient,
+	appServer := server.NewServer(":9080")
+	err = appServer.Start()
+	if err != nil {
+		return nil, err
 	}
 	return evaluator, nil
-}
-
-func (e *Evaluator) Evaluate() {
 }

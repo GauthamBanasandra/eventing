@@ -401,10 +401,17 @@ class Void : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
 
   // accessors -------------------------------------------------------
 
+  // uint32 value = 1;
+  void clear_value();
+  static const int kValueFieldNumber = 1;
+  ::google::protobuf::uint32 value() const;
+  void set_value(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:nftp.Void)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::uint32 value_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_evaluator_2eproto::TableStruct;
 };
@@ -692,6 +699,20 @@ inline void Info::set_allocated_message(::std::string* message) {
 // -------------------------------------------------------------------
 
 // Void
+
+// uint32 value = 1;
+inline void Void::clear_value() {
+  value_ = 0u;
+}
+inline ::google::protobuf::uint32 Void::value() const {
+  // @@protoc_insertion_point(field_get:nftp.Void.value)
+  return value_;
+}
+inline void Void::set_value(::google::protobuf::uint32 value) {
+  
+  value_ = value;
+  // @@protoc_insertion_point(field_set:nftp.Void.value)
+}
 
 // -------------------------------------------------------------------
 

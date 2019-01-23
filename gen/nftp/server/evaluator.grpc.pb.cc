@@ -5,15 +5,12 @@
 #include "evaluator.pb.h"
 #include "evaluator.grpc.pb.h"
 
-#include <functional>
 #include <grpcpp/impl/codegen/async_stream.h>
 #include <grpcpp/impl/codegen/async_unary_call.h>
 #include <grpcpp/impl/codegen/channel_interface.h>
 #include <grpcpp/impl/codegen/client_unary_call.h>
-#include <grpcpp/impl/codegen/client_callback.h>
 #include <grpcpp/impl/codegen/method_handler_impl.h>
 #include <grpcpp/impl/codegen/rpc_service_method.h>
-#include <grpcpp/impl/codegen/server_callback.h>
 #include <grpcpp/impl/codegen/service_type.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
 namespace nftp {
@@ -34,10 +31,6 @@ Notification::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chann
 
 ::grpc::Status Notification::Stub::NotifyPort(::grpc::ClientContext* context, const ::nftp::Port& request, ::nftp::Void* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_NotifyPort_, context, request, response);
-}
-
-void Notification::Stub::experimental_async::NotifyPort(::grpc::ClientContext* context, const ::nftp::Port* request, ::nftp::Void* response, std::function<void(::grpc::Status)> f) {
-  return ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_NotifyPort_, context, request, response, std::move(f));
 }
 
 ::grpc::ClientAsyncResponseReader< ::nftp::Void>* Notification::Stub::AsyncNotifyPortRaw(::grpc::ClientContext* context, const ::nftp::Port& request, ::grpc::CompletionQueue* cq) {
@@ -83,10 +76,6 @@ Evaluator::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
 
 ::grpc::Status Evaluator::Stub::Initialize(::grpc::ClientContext* context, const ::nftp::Config& request, ::nftp::Info* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_Initialize_, context, request, response);
-}
-
-void Evaluator::Stub::experimental_async::Initialize(::grpc::ClientContext* context, const ::nftp::Config* request, ::nftp::Info* response, std::function<void(::grpc::Status)> f) {
-  return ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_Initialize_, context, request, response, std::move(f));
 }
 
 ::grpc::ClientAsyncResponseReader< ::nftp::Info>* Evaluator::Stub::AsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) {

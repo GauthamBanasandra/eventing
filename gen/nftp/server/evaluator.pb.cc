@@ -128,6 +128,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Void, value_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Port, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -140,7 +141,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROT
   { 0, -1, sizeof(::nftp::Config)},
   { 8, -1, sizeof(::nftp::Info)},
   { 15, -1, sizeof(::nftp::Void)},
-  { 20, -1, sizeof(::nftp::Port)},
+  { 21, -1, sizeof(::nftp::Port)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -174,14 +175,15 @@ void AddDescriptorsImpl() {
       "\n\017evaluator.proto\022\004nftp\"O\n\006Config\022\026\n\016Wor"
       "kersPerNode\030\001 \001(\r\022\030\n\020ThreadsPerWorker\030\002 "
       "\001(\r\022\023\n\013NsServerUrl\030\003 \001(\t\"(\n\004Info\022\017\n\007IsFa"
-      "tal\030\001 \001(\010\022\017\n\007Message\030\002 \001(\t\"\006\n\004Void\")\n\004Po"
-      "rt\022\023\n\013EvaluatorId\030\001 \001(\t\022\014\n\004Port\030\002 \001(\r24\n"
-      "\014Notification\022$\n\nNotifyPort\022\n.nftp.Port\032"
-      "\n.nftp.Void23\n\tEvaluator\022&\n\nInitialize\022\014"
-      ".nftp.Config\032\n.nftp.Infob\006proto3"
+      "tal\030\001 \001(\010\022\017\n\007Message\030\002 \001(\t\"\025\n\004Void\022\r\n\005va"
+      "lue\030\001 \001(\r\")\n\004Port\022\023\n\013EvaluatorId\030\001 \001(\t\022\014"
+      "\n\004Port\030\002 \001(\r24\n\014Notification\022$\n\nNotifyPo"
+      "rt\022\n.nftp.Port\032\n.nftp.Void23\n\tEvaluator\022"
+      "&\n\nInitialize\022\014.nftp.Config\032\n.nftp.Infob"
+      "\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 312);
+      descriptor, 327);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "evaluator.proto", &protobuf_RegisterTypes);
 }
@@ -806,6 +808,7 @@ void Info::InternalSwap(Info* other) {
 void Void::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Void::kValueFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Void::Void()
@@ -819,10 +822,12 @@ Void::Void(const Void& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  value_ = from.value_;
   // @@protoc_insertion_point(copy_constructor:nftp.Void)
 }
 
 void Void::SharedCtor() {
+  value_ = 0u;
 }
 
 Void::~Void() {
@@ -853,6 +858,7 @@ void Void::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  value_ = 0u;
   _internal_metadata_.Clear();
 }
 
@@ -865,12 +871,31 @@ bool Void::MergePartialFromCodedStream(
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
-  handle_unusual:
-    if (tag == 0) {
-      goto success;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // uint32 value = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &value_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
     }
-    DO_(::google::protobuf::internal::WireFormat::SkipField(
-          input, tag, _internal_metadata_.mutable_unknown_fields()));
   }
 success:
   // @@protoc_insertion_point(parse_success:nftp.Void)
@@ -887,6 +912,11 @@ void Void::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  // uint32 value = 1;
+  if (this->value() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->value(), output);
+  }
+
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
@@ -900,6 +930,11 @@ void Void::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:nftp.Void)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
+
+  // uint32 value = 1;
+  if (this->value() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->value(), target);
+  }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
@@ -918,6 +953,13 @@ size_t Void::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
+  // uint32 value = 1;
+  if (this->value() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->value());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -945,6 +987,9 @@ void Void::MergeFrom(const Void& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from.value() != 0) {
+    set_value(from.value());
+  }
 }
 
 void Void::CopyFrom(const ::google::protobuf::Message& from) {
@@ -971,6 +1016,7 @@ void Void::Swap(Void* other) {
 }
 void Void::InternalSwap(Void* other) {
   using std::swap;
+  swap(value_, other->value_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 

@@ -11,7 +11,7 @@
 
 PROJECT(evaluator)
 
-SET(CMAKE_CXX_STANDARD 17)
+SET(CMAKE_CXX_STANDARD 11)
 
 SET(GRPC_BUILD_DIR
         /Users/gautham/projects/github/grpc)
@@ -19,17 +19,17 @@ SET(GEN_DIR
         ../../gen)
 
 SET(LIB_GRPC
-        ${GRPC_BUILD_DIR}/libs/opt/libaddress_sorting.dylib
+#        ${GRPC_BUILD_DIR}/libs/opt/libaddress_sorting.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgpr.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgrpc++.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgrpc++_cronet.dylib
-        ${GRPC_BUILD_DIR}/libs/opt/libgrpc++_error_details.dylib
+#        ${GRPC_BUILD_DIR}/libs/opt/libgrpc++_error_details.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgrpc++_reflection.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgrpc++_unsecure.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgrpc.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgrpc_cronet.dylib
         ${GRPC_BUILD_DIR}/libs/opt/libgrpc_unsecure.dylib
-        ${GRPC_BUILD_DIR}/libs/opt/libgrpcpp_channelz.dylib
+#        ${GRPC_BUILD_DIR}/libs/opt/libgrpcpp_channelz.dylib
         ${GRPC_BUILD_DIR}/third_party/protobuf/src/.libs/libprotobuf-lite.17.dylib
         ${GRPC_BUILD_DIR}/third_party/protobuf/src/.libs/libprotobuf-lite.dylib
         ${GRPC_BUILD_DIR}/third_party/protobuf/src/.libs/libprotobuf.17.dylib
@@ -50,5 +50,7 @@ ADD_EXECUTABLE(evaluator
         ${NFTP_SRC}
         src/main.cc
         src/evaluator-server.cc)
+
+ADD_COMPILE_OPTIONS(O0)
 
 TARGET_LINK_LIBRARIES(evaluator ${LIB_GRPC})
