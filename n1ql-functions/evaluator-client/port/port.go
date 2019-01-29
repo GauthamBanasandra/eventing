@@ -12,10 +12,6 @@ func NewFromString(port string) (Port, error) {
 	return Port(p), nil
 }
 
-func NewFromUInt32(port uint32) Port {
-	return Port(port)
-}
-
 func (p *Port) ToString() string {
 	return strconv.Itoa(int(*p))
 }

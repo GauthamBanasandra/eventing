@@ -3,10 +3,11 @@ package client
 import (
 	"context"
 	"errors"
+	"log"
+
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
-	"log"
 )
 
 type EvaluatorClient struct {
@@ -14,7 +15,28 @@ type EvaluatorClient struct {
 	NotificationServer *notificationServer
 
 	evaluators map[evaluator.ID]*evaluator.Evaluator
+	appServer  *server.Server
 	config     Configuration
+}
+
+func NewEvaluatorClient(config Configuration) (*EvaluatorClient, error) {
+	evaluatorInstance := &EvaluatorClient{
+		config:     config,
+		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
+	}
+	if err := evaluatorInstance.spawnComponents(); err != nil {
+		return nil, err
+	}
+	if err := evaluatorInstance.spawnEvaluators(); err != nil {
+		return nil, err
+	}
+	evaluatorInstance.spawnAppServer()
+	return evaluatorInstance, nil
+}
+
+func (e *EvaluatorClient) spawnAppServer() {
+	e.appServer = server.NewServer(":" + e.config.HttpPort.ToString())
+	go e.appServer.Start()
 }
 
 func (e *EvaluatorClient) spawnComponents() error {
@@ -68,22 +90,14 @@ func (e *EvaluatorClient) spawnEvaluators() error {
 	return nil
 }
 
-func NewEvaluatorClient(config Configuration) (*EvaluatorClient, error) {
-	evaluatorInstance := &EvaluatorClient{
-		config:     config,
-		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
+// TODO : This isn't robust. If the first one succeeds and second one fails,
+// the second one will never succeed upon calling Destroy() again
+func (e *EvaluatorClient) Destroy() error {
+	if err := e.appServer.Stop(); err != nil {
+		return err
 	}
-	if err := evaluatorInstance.spawnComponents(); err != nil {
-		return nil, err
+	if err := e.NotificationServer.Stop(); err != nil {
+		return err
 	}
-	if err := evaluatorInstance.spawnEvaluators(); err != nil {
-		return nil, err
-	}
-
-	appServer := server.NewServer(":9080")
-	err := appServer.Start()
-	if err != nil {
-		return nil, err
-	}
-	return evaluatorInstance, nil
+	return nil
 }

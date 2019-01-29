@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"fmt"
+
 	"github.com/couchbase/eventing/gen/nftp/client"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"google.golang.org/grpc"
