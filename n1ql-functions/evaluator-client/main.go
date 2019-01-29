@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	_, err := client.NewEvaluator(client.Configuration{
+	_, err := client.NewEvaluatorClient(client.Configuration{
 		WorkersPerNode:   2,
 		ThreadsPerWorker: 10,
 		NsServerUrl:      "http://locahost:9000",

@@ -1,7 +1,7 @@
 package babysitter
 
 import (
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/common"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/process"
 	"github.com/couchbase/eventing/util"
@@ -20,15 +20,15 @@ func New(notificationPort port.Port) (*Babysitter, error) {
 	}, nil
 }
 
-func (b *Babysitter) AddEvaluator() (common.EvaluatorID, error) {
-	invalidId := common.EvaluatorID("")
+func (b *Babysitter) AddEvaluator() (evaluator.ID, error) {
+	invalidId := evaluator.ID("")
 	uuidGen, err := util.NewUUID()
 	if err != nil {
 		return invalidId, err
 	}
 
-	evaluatorId := common.EvaluatorID(uuidGen.Str())
-	evaluator, err := process.NewProcess(evaluatorPath,
+	evaluatorId := evaluator.ID(uuidGen.Str())
+	evaluatorProcess, err := process.NewProcess(evaluatorPath,
 		[]string{
 			b.notificationPort.ToString(),
 			string(evaluatorId),
@@ -37,6 +37,6 @@ func (b *Babysitter) AddEvaluator() (common.EvaluatorID, error) {
 		return invalidId, err
 	}
 
-	b.evaluators = append(b.evaluators, evaluator)
+	b.evaluators = append(b.evaluators, evaluatorProcess)
 	return evaluatorId, nil
 }
