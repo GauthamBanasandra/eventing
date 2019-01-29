@@ -3,18 +3,20 @@ package client
 import (
 	"context"
 	"github.com/couchbase/eventing/gen/nftp/client"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/common"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"google.golang.org/grpc"
 	"net"
 )
 
 type portNotification struct {
-	evaluatorPort map[string]uint32
+	evaluatorPort map[common.EvaluatorID]port.Port
 	notification  chan struct{}
 }
 
 func newPortNotification() *portNotification {
 	return &portNotification{
-		evaluatorPort: make(map[string]uint32),
+		evaluatorPort: make(map[common.EvaluatorID]port.Port),
 		notification:  make(chan struct{}),
 	}
 }
@@ -49,16 +51,16 @@ func (n *notificationServer) Close() error {
 	return n.handle.Close()
 }
 
-func (n *notificationServer) Port() (string, error) {
-	_, port, err := net.SplitHostPort(n.handle.Addr().String())
+func (n *notificationServer) Port() (port.Port, error) {
+	_, p, err := net.SplitHostPort(n.handle.Addr().String())
 	if err != nil {
-		return "", err
+		return port.NewFromUInt32(0), err
 	}
-	return port, nil
+	return port.NewFromString(p)
 }
 
-func (n *notificationServer) NotifyPort(ctx context.Context, port *nftp.Port) (*nftp.Void, error) {
-	n.portHandler.evaluatorPort[port.EvaluatorId] = port.Port
+func (n *notificationServer) NotifyPort(ctx context.Context, p *nftp.Port) (*nftp.Void, error) {
+	n.portHandler.evaluatorPort[common.EvaluatorID(p.EvaluatorId)] = port.NewFromUInt32(p.Port)
 	n.portHandler.notification <- struct{}{}
 	return &nftp.Void{}, nil
 }
@@ -73,10 +75,10 @@ func (n *notificationServer) controller() {
 	}
 }
 
-func (n *notificationServer) WaitForEvaluatorPort(evaluatorId string) uint32 {
+func (n *notificationServer) WaitForEvaluatorPort(evaluatorId common.EvaluatorID) port.Port {
 	for {
-		if port, exists := n.portHandler.evaluatorPort[evaluatorId]; exists {
-			return port
+		if p, exists := n.portHandler.evaluatorPort[evaluatorId]; exists {
+			return p
 		}
 		<-n.portHandler.notification
 	}

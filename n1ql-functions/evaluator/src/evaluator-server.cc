@@ -26,7 +26,7 @@ grpc::Status EvaluatorServer::Initialize(grpc::ServerContext *context,
   return grpc::Status::OK;
 }
 
-void EvaluatorServer::Run(const std::string &hostname) {
+void EvaluatorServer::Run(const std::string &hostname, const std::string &evaluator_id) {
   grpc::ServerBuilder builder;
   int selected_port = 0;
   builder.AddListeningPort(hostname, grpc::InsecureServerCredentials(),
@@ -37,7 +37,7 @@ void EvaluatorServer::Run(const std::string &hostname) {
 
   grpc::ClientContext context;
   nftp::Port port;
-  port.set_evaluatorid("0");
+  port.set_evaluatorid(evaluator_id);
   port.set_port(static_cast<google::protobuf::uint32>(selected_port));
 
   nftp::Void void_resp;

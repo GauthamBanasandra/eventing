@@ -1,12 +1,13 @@
 package client
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/couchbase/eventing/gen/nftp/client"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
 )
@@ -52,9 +53,9 @@ func (e *Evaluator) spawnEvaluators() error {
 		return err
 	}
 
-	port := e.NotificationServer.WaitForEvaluatorPort(evaluatorId)
+	evaluatorPort := e.NotificationServer.WaitForEvaluatorPort(evaluatorId)
 
-	if err := e.initializeConnection(port); err != nil {
+	if err := e.initializeConnection(evaluatorPort); err != nil {
 		return err
 	}
 
@@ -62,12 +63,12 @@ func (e *Evaluator) spawnEvaluators() error {
 	return nil
 }
 
-func (e *Evaluator) initializeConnection(port uint32) error {
+func (e *Evaluator) initializeConnection(evaluatorPort port.Port) error {
 	var err error
 	var options []grpc.DialOption
 	options = append(options, grpc.WithInsecure())
 
-	e.connection, err = grpc.Dial(fmt.Sprintf("127.0.0.1:%v", port), options...)
+	e.connection, err = grpc.Dial(fmt.Sprintf("127.0.0.1:%v", evaluatorPort), options...)
 	if err != nil {
 		return err
 	}

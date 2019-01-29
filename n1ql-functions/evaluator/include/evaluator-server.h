@@ -18,7 +18,7 @@ public:
   grpc::Status Initialize(grpc::ServerContext *context,
                           const nftp::Config *request,
                           nftp::Info *response) override;
-  void Run(const std::string &hostname);
+  void Run(const std::string &hostname, const std::string &evaluator_id);
 
 private:
   std::unique_ptr<nftp::Notification::Stub> notification_client_;

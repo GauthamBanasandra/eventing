@@ -8,12 +8,15 @@
 #include "evaluator-server.h"
 
 int main(int argc, char *argv[]) {
-  if (argc < 2) {
-    std::cerr << "Expected at least 2 arguments" << std::endl;
+  if (argc < 3) {
+    std::cerr << "Expected at least 3 arguments" << std::endl;
     return 1;
   }
 
+  std::string notification_port(argv[1]);
+  std::string evaluator_id(argv[2]);
+
   std::string hostname("0.0.0.0:0");
-  EvaluatorServer(argv[1]).Run(hostname);
+  EvaluatorServer(notification_port).Run(hostname, evaluator_id);
   return 0;
 }

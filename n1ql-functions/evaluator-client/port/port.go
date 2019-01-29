@@ -1,10 +1,10 @@
-package client
+package port
 
 import "strconv"
 
 type Port uint32
 
-func NewPortFromString(port string) (Port, error) {
+func NewFromString(port string) (Port, error) {
 	p, err := strconv.Atoi(port)
 	if err != nil {
 		return Port(0), err
@@ -12,7 +12,7 @@ func NewPortFromString(port string) (Port, error) {
 	return Port(p), nil
 }
 
-func NewPortFromUint32(port uint32) Port {
+func NewFromUInt32(port uint32) Port {
 	return Port(port)
 }
 
