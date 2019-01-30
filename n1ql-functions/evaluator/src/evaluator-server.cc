@@ -8,8 +8,8 @@
 
 #include "evaluator-server.h"
 
-EvaluatorServer::EvaluatorServer(const std::string &notification_port) {
-  auto channel = grpc::CreateChannel("127.0.0.1:" + notification_port,
+EvaluatorServer::EvaluatorServer(const Constants &constants) : const_(constants) {
+  auto channel = grpc::CreateChannel("127.0.0.1:" + const_.notification_port,
                                      grpc::InsecureChannelCredentials());
   notification_client_ = nftp::Notification::NewStub(channel);
 }
@@ -26,7 +26,7 @@ grpc::Status EvaluatorServer::Initialize(grpc::ServerContext *context,
   return grpc::Status::OK;
 }
 
-void EvaluatorServer::Run(const std::string &hostname, const std::string &evaluator_id) {
+void EvaluatorServer::Run(const std::string &hostname) {
   grpc::ServerBuilder builder;
   int selected_port = 0;
   builder.AddListeningPort(hostname, grpc::InsecureServerCredentials(),
@@ -37,7 +37,7 @@ void EvaluatorServer::Run(const std::string &hostname, const std::string &evalua
 
   grpc::ClientContext context;
   nftp::Port port;
-  port.set_evaluatorid(evaluator_id);
+  port.set_evaluatorid(const_.evaluator_id);
   port.set_port(static_cast<google::protobuf::uint32>(selected_port));
 
   nftp::Void void_resp;

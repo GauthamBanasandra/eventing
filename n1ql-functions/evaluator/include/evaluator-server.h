@@ -9,18 +9,20 @@
 #include <memory>
 #include <string>
 
+#include "constants.h"
 #include "evaluator.grpc.pb.h"
 
 class EvaluatorServer final : public nftp::Evaluator::Service {
 public:
-  explicit EvaluatorServer(const std::string &notification_port);
+  explicit EvaluatorServer(const Constants& constants);
 
   grpc::Status Initialize(grpc::ServerContext *context,
                           const nftp::Config *request,
                           nftp::Info *response) override;
-  void Run(const std::string &hostname, const std::string &evaluator_id);
+  void Run(const std::string &hostname);
 
 private:
+  const Constants& const_;
   std::unique_ptr<nftp::Notification::Stub> notification_client_;
 };
 

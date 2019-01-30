@@ -8,18 +8,19 @@ import (
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 )
 
 type EvaluatorClient struct {
 	Babysitter         *babysitter.Babysitter
 	NotificationServer *notificationServer
 
-	evaluators map[evaluator.ID]*evaluator.Evaluator
-	appServer  *server.Server
-	config     Configuration
+	evaluators         map[evaluator.ID]*evaluator.Evaluator
+	appServer          *server.Server
+	config             *configuration.Configuration
 }
 
-func NewEvaluatorClient(config Configuration) (*EvaluatorClient, error) {
+func NewEvaluatorClient(config *configuration.Configuration) (*EvaluatorClient, error) {
 	evaluatorInstance := &EvaluatorClient{
 		config:     config,
 		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
@@ -51,7 +52,7 @@ func (e *EvaluatorClient) spawnComponents() error {
 		return err
 	}
 
-	e.Babysitter, err = babysitter.New(notificationPort)
+	e.Babysitter, err = babysitter.New(e.config, notificationPort)
 	if err != nil {
 		return err
 	}

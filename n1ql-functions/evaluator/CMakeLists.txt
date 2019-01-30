@@ -11,7 +11,7 @@
 
 PROJECT(evaluator)
 
-SET(CMAKE_CXX_STANDARD 11)
+INCLUDE (FindCouchbaseV8)
 
 SET(GRPC_BUILD_DIR
         /Users/gautham/projects/github/grpc)
@@ -44,13 +44,14 @@ SET(NFTP_SRC
 INCLUDE_DIRECTORIES(
         include
         ${GRPC_BUILD_DIR}/include
-        ${GEN_DIR}/nftp/server)
+        ${GEN_DIR}/nftp/server
+        ${V8_INCLUDE_DIR})
 
 ADD_EXECUTABLE(evaluator
         ${NFTP_SRC}
         src/main.cc
         src/evaluator-server.cc)
 
-ADD_COMPILE_OPTIONS(O0)
-
-TARGET_LINK_LIBRARIES(evaluator ${LIB_GRPC})
+TARGET_LINK_LIBRARIES(evaluator
+        ${LIB_GRPC}
+        ${V8_LIBRARIES})

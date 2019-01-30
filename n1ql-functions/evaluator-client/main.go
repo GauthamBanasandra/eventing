@@ -8,10 +8,11 @@ import (
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/client"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"strings"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 )
 
 func main() {
-	evaluatorClient, err := client.NewEvaluatorClient(client.Configuration{
+	evaluatorClient, err := client.NewEvaluatorClient(&configuration.Configuration{
 		WorkersPerNode:   2,
 		ThreadsPerWorker: 10,
 		HttpPort:         port.Port(9090),
