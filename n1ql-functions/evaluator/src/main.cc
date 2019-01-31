@@ -7,6 +7,8 @@
 
 #include "constants.h"
 #include "evaluator-server.h"
+#include "evaluator.h"
+#include "notification-client.h"
 
 int main(int argc, char *argv[]) {
   if (argc < 4) {
@@ -15,7 +17,9 @@ int main(int argc, char *argv[]) {
   }
   Constants constants(argv);
 
+  NotificationClient client(constants);
+  Evaluator evaluator(constants, client);
   std::string hostname("0.0.0.0:0");
-  EvaluatorServer(constants).Run(hostname);
+  EvaluatorServer(constants, evaluator).Run(hostname);
   return 0;
 }

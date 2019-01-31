@@ -6,9 +6,10 @@ import (
 	"log"
 
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/function"
 )
 
 type EvaluatorClient struct {
@@ -81,7 +82,7 @@ func (e *EvaluatorClient) spawnEvaluators() error {
 		}
 
 		response, err := evaluatorInstance.Client.Initialize(context.Background(),
-			e.config.ToNftp())
+			e.config.ToNFTP())
 		if err != nil {
 			return err
 		}
@@ -99,6 +100,24 @@ func (e *EvaluatorClient) Destroy() error {
 	}
 	if err := e.NotificationServer.Stop(); err != nil {
 		return err
+	}
+	return nil
+}
+
+func (e *EvaluatorClient) AddFunction(code string) error {
+	f, err := function.New(code)
+	if err != nil {
+		return err
+	}
+	for _, evaluatorInstance := range e.evaluators {
+		info, err := evaluatorInstance.Client.AddFunction(context.Background(), f.ToNFTP())
+		log.Printf("Got response : %v", info)
+		if err != nil {
+			return err
+		}
+		if info.IsFatal {
+			return errors.New(info.Message)
+		}
 	}
 	return nil
 }

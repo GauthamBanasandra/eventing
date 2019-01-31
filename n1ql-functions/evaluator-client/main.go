@@ -6,15 +6,15 @@ import (
 	"os"
 
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/client"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"strings"
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 )
 
 func main() {
 	evaluatorClient, err := client.NewEvaluatorClient(&configuration.Configuration{
-		WorkersPerNode:   2,
-		ThreadsPerWorker: 10,
+		WorkersPerNode:   1,
+		ThreadsPerWorker: 3,
 		HttpPort:         port.Port(9090),
 		NsServerUrl:      "http://locahost:9000",
 	})
@@ -35,6 +35,17 @@ func main() {
 				log.Fatalf("Unable to stop evaluator client, err : %v", err)
 			}
 			return
+
+		case "add":
+			code := `
+			function f(){
+				let value = 2 + 2;
+				return value;
+			}
+			f();`
+			if err := evaluatorClient.AddFunction(code); err != nil {
+				log.Fatalf("Unable to add Function, err : %v", err)
+			}
 		}
 	}
 }

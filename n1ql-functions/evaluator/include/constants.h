@@ -9,11 +9,14 @@
 
 struct Constants {
   explicit Constants(char *argv[])
-      : notification_port(argv[1]), evaluator_id(argv[2]), num_threads(static_cast<std::size_t>(std::stoi(argv[3]))) {}
+      : executable_path(argv[0]), notification_port(argv[1]),
+        evaluator_id(argv[2]),
+        num_threads(static_cast<std::size_t>(std::stoi(argv[3]))) {}
 
+  std::string executable_path;
   std::string notification_port;
   std::string evaluator_id;
   std::size_t num_threads;
 };
 
-#endif //CONSTANTS_H
+#endif // CONSTANTS_H

@@ -40,6 +40,16 @@ class PortDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<Port>
       _instance;
 } _Port_default_instance_;
+class FunctionDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Function>
+      _instance;
+} _Function_default_instance_;
+class LogDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Log>
+      _instance;
+} _Log_default_instance_;
 }  // namespace nftp
 namespace protobuf_evaluator_2eproto {
 static void InitDefaultsConfig() {
@@ -98,14 +108,44 @@ static void InitDefaultsPort() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_Port =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPort}, {}};
 
+static void InitDefaultsFunction() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::nftp::_Function_default_instance_;
+    new (ptr) ::nftp::Function();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::nftp::Function::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_Function =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsFunction}, {}};
+
+static void InitDefaultsLog() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::nftp::_Log_default_instance_;
+    new (ptr) ::nftp::Log();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::nftp::Log::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_Log =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsLog}, {}};
+
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_Config.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Info.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Void.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Port.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Function.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Log.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[4];
+::google::protobuf::Metadata file_level_metadata[6];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
@@ -136,12 +176,28 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Port, evaluatorid_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Port, port_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Function, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Function, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Function, code_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Log, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Log, evaluatorid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::nftp::Log, msg_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::nftp::Config)},
   { 8, -1, sizeof(::nftp::Info)},
   { 15, -1, sizeof(::nftp::Void)},
   { 21, -1, sizeof(::nftp::Port)},
+  { 28, -1, sizeof(::nftp::Function)},
+  { 35, -1, sizeof(::nftp::Log)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -149,6 +205,8 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::nftp::_Info_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::nftp::_Void_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::nftp::_Port_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::nftp::_Function_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::nftp::_Log_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -166,7 +224,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 4);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 6);
 }
 
 void AddDescriptorsImpl() {
@@ -175,15 +233,19 @@ void AddDescriptorsImpl() {
       "\n\017evaluator.proto\022\004nftp\"O\n\006Config\022\026\n\016Wor"
       "kersPerNode\030\001 \001(\r\022\030\n\020ThreadsPerWorker\030\002 "
       "\001(\r\022\023\n\013NsServerUrl\030\003 \001(\t\"(\n\004Info\022\017\n\007IsFa"
-      "tal\030\001 \001(\010\022\017\n\007Message\030\002 \001(\t\"\025\n\004Void\022\r\n\005va"
+      "tal\030\001 \001(\010\022\017\n\007Message\030\002 \001(\t\"\025\n\004Void\022\r\n\005Va"
       "lue\030\001 \001(\r\")\n\004Port\022\023\n\013EvaluatorId\030\001 \001(\t\022\014"
-      "\n\004Port\030\002 \001(\r24\n\014Notification\022$\n\nNotifyPo"
-      "rt\022\n.nftp.Port\032\n.nftp.Void23\n\tEvaluator\022"
-      "&\n\nInitialize\022\014.nftp.Config\032\n.nftp.Infob"
-      "\006proto3"
+      "\n\004Port\030\002 \001(\r\"$\n\010Function\022\n\n\002ID\030\001 \001(\t\022\014\n\004"
+      "Code\030\002 \001(\t\"\'\n\003Log\022\023\n\013EvaluatorID\030\001 \001(\t\022\013"
+      "\n\003Msg\030\002 \001(\t2U\n\014Notification\022$\n\nNotifyPor"
+      "t\022\n.nftp.Port\032\n.nftp.Void\022\037\n\006Logger\022\t.nf"
+      "tp.Log\032\n.nftp.Void2^\n\tEvaluator\022&\n\nIniti"
+      "alize\022\014.nftp.Config\032\n.nftp.Info\022)\n\013AddFu"
+      "nction\022\016.nftp.Function\032\n.nftp.Infob\006prot"
+      "o3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 327);
+      descriptor, 482);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "evaluator.proto", &protobuf_RegisterTypes);
 }
@@ -872,7 +934,7 @@ bool Void::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // uint32 value = 1;
+      // uint32 Value = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
@@ -912,7 +974,7 @@ void Void::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // uint32 value = 1;
+  // uint32 Value = 1;
   if (this->value() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->value(), output);
   }
@@ -931,7 +993,7 @@ void Void::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // uint32 value = 1;
+  // uint32 Value = 1;
   if (this->value() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->value(), target);
   }
@@ -953,7 +1015,7 @@ size_t Void::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // uint32 value = 1;
+  // uint32 Value = 1;
   if (this->value() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::UInt32Size(
@@ -1307,6 +1369,606 @@ void Port::InternalSwap(Port* other) {
 }
 
 
+// ===================================================================
+
+void Function::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Function::kIDFieldNumber;
+const int Function::kCodeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Function::Function()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_evaluator_2eproto::scc_info_Function.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:nftp.Function)
+}
+Function::Function(const Function& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.id().size() > 0) {
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+  code_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.code().size() > 0) {
+    code_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.code_);
+  }
+  // @@protoc_insertion_point(copy_constructor:nftp.Function)
+}
+
+void Function::SharedCtor() {
+  id_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  code_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+Function::~Function() {
+  // @@protoc_insertion_point(destructor:nftp.Function)
+  SharedDtor();
+}
+
+void Function::SharedDtor() {
+  id_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  code_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void Function::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Function::descriptor() {
+  ::protobuf_evaluator_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_evaluator_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Function& Function::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_evaluator_2eproto::scc_info_Function.base);
+  return *internal_default_instance();
+}
+
+
+void Function::Clear() {
+// @@protoc_insertion_point(message_clear_start:nftp.Function)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  _internal_metadata_.Clear();
+}
+
+bool Function::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:nftp.Function)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // string ID = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_id()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->id().data(), static_cast<int>(this->id().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "nftp.Function.ID"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // string Code = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_code()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->code().data(), static_cast<int>(this->code().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "nftp.Function.Code"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:nftp.Function)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:nftp.Function)
+  return false;
+#undef DO_
+}
+
+void Function::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:nftp.Function)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string ID = 1;
+  if (this->id().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->id().data(), static_cast<int>(this->id().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Function.ID");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->id(), output);
+  }
+
+  // string Code = 2;
+  if (this->code().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->code().data(), static_cast<int>(this->code().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Function.Code");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->code(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:nftp.Function)
+}
+
+::google::protobuf::uint8* Function::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:nftp.Function)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string ID = 1;
+  if (this->id().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->id().data(), static_cast<int>(this->id().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Function.ID");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->id(), target);
+  }
+
+  // string Code = 2;
+  if (this->code().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->code().data(), static_cast<int>(this->code().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Function.Code");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->code(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:nftp.Function)
+  return target;
+}
+
+size_t Function::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:nftp.Function)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // string ID = 1;
+  if (this->id().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->id());
+  }
+
+  // string Code = 2;
+  if (this->code().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->code());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Function::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:nftp.Function)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Function* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Function>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:nftp.Function)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:nftp.Function)
+    MergeFrom(*source);
+  }
+}
+
+void Function::MergeFrom(const Function& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:nftp.Function)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.id().size() > 0) {
+
+    id_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.id_);
+  }
+  if (from.code().size() > 0) {
+
+    code_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.code_);
+  }
+}
+
+void Function::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:nftp.Function)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Function::CopyFrom(const Function& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:nftp.Function)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Function::IsInitialized() const {
+  return true;
+}
+
+void Function::Swap(Function* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Function::InternalSwap(Function* other) {
+  using std::swap;
+  id_.Swap(&other->id_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  code_.Swap(&other->code_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Function::GetMetadata() const {
+  protobuf_evaluator_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_evaluator_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Log::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Log::kEvaluatorIDFieldNumber;
+const int Log::kMsgFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Log::Log()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_evaluator_2eproto::scc_info_Log.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:nftp.Log)
+}
+Log::Log(const Log& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  evaluatorid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.evaluatorid().size() > 0) {
+    evaluatorid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.evaluatorid_);
+  }
+  msg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.msg().size() > 0) {
+    msg_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_);
+  }
+  // @@protoc_insertion_point(copy_constructor:nftp.Log)
+}
+
+void Log::SharedCtor() {
+  evaluatorid_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  msg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+Log::~Log() {
+  // @@protoc_insertion_point(destructor:nftp.Log)
+  SharedDtor();
+}
+
+void Log::SharedDtor() {
+  evaluatorid_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  msg_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void Log::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Log::descriptor() {
+  ::protobuf_evaluator_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_evaluator_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Log& Log::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_evaluator_2eproto::scc_info_Log.base);
+  return *internal_default_instance();
+}
+
+
+void Log::Clear() {
+// @@protoc_insertion_point(message_clear_start:nftp.Log)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  evaluatorid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  _internal_metadata_.Clear();
+}
+
+bool Log::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:nftp.Log)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // string EvaluatorID = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_evaluatorid()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->evaluatorid().data(), static_cast<int>(this->evaluatorid().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "nftp.Log.EvaluatorID"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // string Msg = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_msg()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->msg().data(), static_cast<int>(this->msg().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "nftp.Log.Msg"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:nftp.Log)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:nftp.Log)
+  return false;
+#undef DO_
+}
+
+void Log::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:nftp.Log)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string EvaluatorID = 1;
+  if (this->evaluatorid().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->evaluatorid().data(), static_cast<int>(this->evaluatorid().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Log.EvaluatorID");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->evaluatorid(), output);
+  }
+
+  // string Msg = 2;
+  if (this->msg().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->msg().data(), static_cast<int>(this->msg().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Log.Msg");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->msg(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:nftp.Log)
+}
+
+::google::protobuf::uint8* Log::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:nftp.Log)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string EvaluatorID = 1;
+  if (this->evaluatorid().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->evaluatorid().data(), static_cast<int>(this->evaluatorid().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Log.EvaluatorID");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->evaluatorid(), target);
+  }
+
+  // string Msg = 2;
+  if (this->msg().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->msg().data(), static_cast<int>(this->msg().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "nftp.Log.Msg");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->msg(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:nftp.Log)
+  return target;
+}
+
+size_t Log::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:nftp.Log)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // string EvaluatorID = 1;
+  if (this->evaluatorid().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->evaluatorid());
+  }
+
+  // string Msg = 2;
+  if (this->msg().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->msg());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Log::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:nftp.Log)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Log* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Log>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:nftp.Log)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:nftp.Log)
+    MergeFrom(*source);
+  }
+}
+
+void Log::MergeFrom(const Log& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:nftp.Log)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.evaluatorid().size() > 0) {
+
+    evaluatorid_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.evaluatorid_);
+  }
+  if (from.msg().size() > 0) {
+
+    msg_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.msg_);
+  }
+}
+
+void Log::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:nftp.Log)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Log::CopyFrom(const Log& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:nftp.Log)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Log::IsInitialized() const {
+  return true;
+}
+
+void Log::Swap(Log* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Log::InternalSwap(Log* other) {
+  using std::swap;
+  evaluatorid_.Swap(&other->evaluatorid_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  msg_.Swap(&other->msg_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Log::GetMetadata() const {
+  protobuf_evaluator_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_evaluator_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace nftp
 namespace google {
@@ -1322,6 +1984,12 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::nftp::Void* Arena::CreateMaybeMe
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::nftp::Port* Arena::CreateMaybeMessage< ::nftp::Port >(Arena* arena) {
   return Arena::CreateInternal< ::nftp::Port >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::nftp::Function* Arena::CreateMaybeMessage< ::nftp::Function >(Arena* arena) {
+  return Arena::CreateInternal< ::nftp::Function >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::nftp::Log* Arena::CreateMaybeMessage< ::nftp::Log >(Arena* arena) {
+  return Arena::CreateInternal< ::nftp::Log >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

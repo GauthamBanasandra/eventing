@@ -8,6 +8,7 @@ import (
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"google.golang.org/grpc"
+	"log"
 )
 
 type portNotification struct {
@@ -72,4 +73,9 @@ func (n *notificationServer) WaitForEvaluatorPort(evaluatorId evaluator.ID) port
 		}
 		<-n.portHandler.notification
 	}
+}
+
+func (n *notificationServer) Logger(ctx context.Context, l *nftp.Log) (*nftp.Void, error) {
+	log.Printf("%s\t%s", l.EvaluatorID, l.Msg)
+	return &nftp.Void{}, nil
 }

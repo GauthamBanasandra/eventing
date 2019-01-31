@@ -13,7 +13,7 @@ type Configuration struct {
 	DebuggerPort     port.Port
 }
 
-func (c *Configuration) ToNftp() *nftp.Config {
+func (c *Configuration) ToNFTP() *nftp.Config {
 	return &nftp.Config{
 		WorkersPerNode:   c.WorkersPerNode,
 		ThreadsPerWorker: c.ThreadsPerWorker,

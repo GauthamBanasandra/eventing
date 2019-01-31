@@ -1,11 +1,11 @@
 package babysitter
 
 import (
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/process"
 	"github.com/couchbase/eventing/util"
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 	"strconv"
 )
 
@@ -19,7 +19,7 @@ type Babysitter struct {
 
 func New(config *configuration.Configuration, notificationPort port.Port) (*Babysitter, error) {
 	return &Babysitter{
-		config: config,
+		config:           config,
 		notificationPort: notificationPort,
 	}, nil
 }

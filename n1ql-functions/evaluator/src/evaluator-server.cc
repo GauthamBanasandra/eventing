@@ -8,7 +8,8 @@
 
 #include "evaluator-server.h"
 
-EvaluatorServer::EvaluatorServer(const Constants &constants) : const_(constants) {
+EvaluatorServer::EvaluatorServer(const Constants &constants, Evaluator &evaluator)
+    : evaluator_(evaluator), const_(constants) {
   auto channel = grpc::CreateChannel("127.0.0.1:" + const_.notification_port,
                                      grpc::InsecureChannelCredentials());
   notification_client_ = nftp::Notification::NewStub(channel);
@@ -44,4 +45,13 @@ void EvaluatorServer::Run(const std::string &hostname) {
   auto status = notification_client_->NotifyPort(&context, port, &void_resp);
   std::cout << "status : " << status.ok() << std::endl;
   server->Wait();
+}
+
+grpc::Status EvaluatorServer::AddFunction(grpc::ServerContext *context,
+                                          const nftp::Function *request,
+                                          nftp::Info *response) {
+  auto info = evaluator_.AddFunction({request});
+  response->set_isfatal(info.is_fatal);
+  response->set_message(info.msg);
+  return grpc::Status::OK;
 }

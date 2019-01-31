@@ -14,7 +14,7 @@ message Info {
 }
 
 message Void {
-    uint32 value = 1;
+    uint32 Value = 1;
 }
 
 message Port {
@@ -22,12 +22,24 @@ message Port {
     uint32 Port = 2;
 }
 
+message Function {
+    string ID = 1;
+    string Code = 2;
+}
+
+message Log {
+    string EvaluatorID = 1;
+    string Msg = 2;
+}
+
 service Notification {
     rpc NotifyPort (Port) returns (Void);
+    rpc Logger (Log) returns (Void);
 }
 
 service Evaluator {
     rpc Initialize (Config) returns (Info);
+    rpc AddFunction (Function) returns (Info);
 }
 
 // Commands to run

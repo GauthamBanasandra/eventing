@@ -17,6 +17,8 @@ SET(GRPC_BUILD_DIR
         /Users/gautham/projects/github/grpc)
 SET(GEN_DIR
         ../../gen)
+SET(LIBS_DIR
+        ../../libs)
 
 SET(LIB_GRPC
 #        ${GRPC_BUILD_DIR}/libs/opt/libaddress_sorting.dylib
@@ -45,12 +47,15 @@ INCLUDE_DIRECTORIES(
         include
         ${GRPC_BUILD_DIR}/include
         ${GEN_DIR}/nftp/server
-        ${V8_INCLUDE_DIR})
+        ${V8_INCLUDE_DIR}
+        ${LIBS_DIR}/include)
 
 ADD_EXECUTABLE(evaluator
         ${NFTP_SRC}
         src/main.cc
-        src/evaluator-server.cc)
+        src/evaluator-server.cc
+        src/evaluator.cc
+        src/notification-client.cc)
 
 TARGET_LINK_LIBRARIES(evaluator
         ${LIB_GRPC}
