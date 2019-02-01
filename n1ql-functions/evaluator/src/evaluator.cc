@@ -69,6 +69,29 @@ Info Evaluator::AddFunction(const Function &function) {
   std::cout << *utf8_result << std::endl;
   runtime_[function.id].isolate = isolate_;
   runtime_[function.id].context.Reset(isolate_, context);
-  //  auto c = contexts_[function.id].Get(isolate);
   return {false, *utf8_result};
+}
+
+Info Evaluator::Evaluate(const Params &params) {
+  notification_client_.Log("Received Evaluate");
+  v8::Locker locker(isolate_);
+  v8::Isolate::Scope isolate_scope(isolate_);
+  v8::HandleScope handle_scope(isolate_);
+  auto context = runtime_[params.function_id].context.Get(isolate_);
+  v8::Context::Scope context_scope(context);
+
+  auto global = context->Global();
+  v8::Local<v8::Value> function_val;
+  if (!TO_LOCAL(global->Get(context, v8::String::NewFromUtf8(isolate_, params.function_name.c_str())), &function_val)) {
+    return {true, "Unable to get function from global"};
+  }
+
+  auto function = function_val.As<v8::Function>();
+  v8::Local<v8::Value> result;
+  if (!TO_LOCAL(function->Call(context, global, 0, nullptr), &result)) {
+    return {true, "Unable to call function"};
+  }
+
+  v8::String::Utf8Value result_utf8(result);
+  return {false, *result_utf8};
 }

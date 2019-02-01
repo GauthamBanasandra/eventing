@@ -89,6 +89,7 @@ Notification::Service::~Service() {
 static const char* Evaluator_method_names[] = {
   "/nftp.Evaluator/Initialize",
   "/nftp.Evaluator/AddFunction",
+  "/nftp.Evaluator/Evaluate",
 };
 
 std::unique_ptr< Evaluator::Stub> Evaluator::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -100,6 +101,7 @@ std::unique_ptr< Evaluator::Stub> Evaluator::NewStub(const std::shared_ptr< ::gr
 Evaluator::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
   : channel_(channel), rpcmethod_Initialize_(Evaluator_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_AddFunction_(Evaluator_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_Evaluate_(Evaluator_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status Evaluator::Stub::Initialize(::grpc::ClientContext* context, const ::nftp::Config& request, ::nftp::Info* response) {
@@ -126,6 +128,18 @@ Evaluator::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
   return ::grpc::internal::ClientAsyncResponseReaderFactory< ::nftp::Info>::Create(channel_.get(), cq, rpcmethod_AddFunction_, context, request, false);
 }
 
+::grpc::Status Evaluator::Stub::Evaluate(::grpc::ClientContext* context, const ::nftp::Params& request, ::nftp::Info* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_Evaluate_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::nftp::Info>* Evaluator::Stub::AsyncEvaluateRaw(::grpc::ClientContext* context, const ::nftp::Params& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::nftp::Info>::Create(channel_.get(), cq, rpcmethod_Evaluate_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::nftp::Info>* Evaluator::Stub::PrepareAsyncEvaluateRaw(::grpc::ClientContext* context, const ::nftp::Params& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::nftp::Info>::Create(channel_.get(), cq, rpcmethod_Evaluate_, context, request, false);
+}
+
 Evaluator::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Evaluator_method_names[0],
@@ -137,6 +151,11 @@ Evaluator::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Evaluator::Service, ::nftp::Function, ::nftp::Info>(
           std::mem_fn(&Evaluator::Service::AddFunction), this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      Evaluator_method_names[2],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< Evaluator::Service, ::nftp::Params, ::nftp::Info>(
+          std::mem_fn(&Evaluator::Service::Evaluate), this)));
 }
 
 Evaluator::Service::~Service() {
@@ -150,6 +169,13 @@ Evaluator::Service::~Service() {
 }
 
 ::grpc::Status Evaluator::Service::AddFunction(::grpc::ServerContext* context, const ::nftp::Function* request, ::nftp::Info* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Evaluator::Service::Evaluate(::grpc::ServerContext* context, const ::nftp::Params* request, ::nftp::Info* response) {
   (void) context;
   (void) request;
   (void) response;

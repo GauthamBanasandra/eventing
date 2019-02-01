@@ -23,6 +23,8 @@ class EvaluatorServer final : public nftp::Evaluator::Service {
   grpc::Status AddFunction(grpc::ServerContext *context,
                            const nftp::Function *request,
                            nftp::Info *response) override;
+  grpc::Status Evaluate(grpc::ServerContext *context, const nftp::Params *request, nftp::Info *response) override;
+
   void Run(const std::string &hostname);
 
  private:

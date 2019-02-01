@@ -29,6 +29,7 @@ public:
   virtual ~Evaluator();
 
   Info AddFunction(const Function &function);
+  Info Evaluate(const Params& params);
 
 private:
   const Constants &const_;

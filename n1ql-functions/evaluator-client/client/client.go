@@ -10,6 +10,7 @@ import (
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/function"
+	"github.com/couchbase/eventing/gen/nftp/client"
 )
 
 type EvaluatorClient struct {
@@ -104,11 +105,7 @@ func (e *EvaluatorClient) Destroy() error {
 	return nil
 }
 
-func (e *EvaluatorClient) AddFunction(code string) error {
-	f, err := function.New(code)
-	if err != nil {
-		return err
-	}
+func (e *EvaluatorClient) AddFunction(f *function.Function) error {
 	for _, evaluatorInstance := range e.evaluators {
 		info, err := evaluatorInstance.Client.AddFunction(context.Background(), f.ToNFTP())
 		log.Printf("Got response : %v", info)
@@ -118,6 +115,23 @@ func (e *EvaluatorClient) AddFunction(code string) error {
 		if info.IsFatal {
 			return errors.New(info.Message)
 		}
+	}
+	return nil
+}
+
+func (e *EvaluatorClient) Evaluate(f *function.Function) error {
+	for evaluatorID, evaluatorInstance := range e.evaluators {
+		info, err := evaluatorInstance.Client.Evaluate(context.Background(), &nftp.Params{
+			FunctionID: f.ID,
+			FunctionName: "f",
+		})
+		if err != nil {
+			return err
+		}
+		if info.IsFatal {
+			return errors.New(info.Message)
+		}
+		log.Printf("Got response : %v\t%v", evaluatorID, info.Message)
 	}
 	return nil
 }

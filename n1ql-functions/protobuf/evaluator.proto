@@ -32,6 +32,11 @@ message Log {
     string Msg = 2;
 }
 
+message Params {
+    string FunctionID = 1;
+    string FunctionName = 2;
+}
+
 service Notification {
     rpc NotifyPort (Port) returns (Void);
     rpc Logger (Log) returns (Void);
@@ -40,6 +45,7 @@ service Notification {
 service Evaluator {
     rpc Initialize (Config) returns (Info);
     rpc AddFunction (Function) returns (Info);
+    rpc Evaluate (Params) returns (Info);
 }
 
 // Commands to run

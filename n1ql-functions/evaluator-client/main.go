@@ -9,6 +9,7 @@ import (
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"strings"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/function"
 )
 
 func main() {
@@ -20,6 +21,17 @@ func main() {
 	})
 	if err != nil {
 		log.Fatalf("Unable to start evaluator client, err : %v", err)
+	}
+
+	code := `
+		function f(){
+			let value = 2 + 2;
+			return value;
+		}
+		f();`
+	f, err := function.New(code)
+	if err != nil {
+		log.Fatalf("Unable to create Function, err : %v", err)
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -37,14 +49,13 @@ func main() {
 			return
 
 		case "add":
-			code := `
-			function f(){
-				let value = 2 + 2;
-				return value;
-			}
-			f();`
-			if err := evaluatorClient.AddFunction(code); err != nil {
+			if err := evaluatorClient.AddFunction(f); err != nil {
 				log.Fatalf("Unable to add Function, err : %v", err)
+			}
+
+		case "eval":
+			if err := evaluatorClient.Evaluate(f); err != nil {
+				log.Fatalf("Unable to evaluate, err : %v", err)
 			}
 		}
 	}

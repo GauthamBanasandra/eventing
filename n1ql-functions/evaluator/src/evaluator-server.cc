@@ -55,3 +55,12 @@ grpc::Status EvaluatorServer::AddFunction(grpc::ServerContext *context,
   response->set_message(info.msg);
   return grpc::Status::OK;
 }
+
+grpc::Status EvaluatorServer::Evaluate(grpc::ServerContext *context,
+                                       const nftp::Params *request,
+                                       nftp::Info *response) {
+  auto info = evaluator_.Evaluate({request});
+  response->set_isfatal(info.is_fatal);
+  response->set_message(info.msg);
+  return grpc::Status::OK;
+}
