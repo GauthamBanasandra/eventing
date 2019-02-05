@@ -49,6 +49,9 @@ namespace nftp {
 class Config;
 class ConfigDefaultTypeInternal;
 extern ConfigDefaultTypeInternal _Config_default_instance_;
+class EvaluateRequest;
+class EvaluateRequestDefaultTypeInternal;
+extern EvaluateRequestDefaultTypeInternal _EvaluateRequest_default_instance_;
 class Function;
 class FunctionDefaultTypeInternal;
 extern FunctionDefaultTypeInternal _Function_default_instance_;
@@ -58,9 +61,6 @@ extern InfoDefaultTypeInternal _Info_default_instance_;
 class Log;
 class LogDefaultTypeInternal;
 extern LogDefaultTypeInternal _Log_default_instance_;
-class Params;
-class ParamsDefaultTypeInternal;
-extern ParamsDefaultTypeInternal _Params_default_instance_;
 class Port;
 class PortDefaultTypeInternal;
 extern PortDefaultTypeInternal _Port_default_instance_;
@@ -71,10 +71,10 @@ extern VoidDefaultTypeInternal _Void_default_instance_;
 namespace google {
 namespace protobuf {
 template<> ::nftp::Config* Arena::CreateMaybeMessage<::nftp::Config>(Arena*);
+template<> ::nftp::EvaluateRequest* Arena::CreateMaybeMessage<::nftp::EvaluateRequest>(Arena*);
 template<> ::nftp::Function* Arena::CreateMaybeMessage<::nftp::Function>(Arena*);
 template<> ::nftp::Info* Arena::CreateMaybeMessage<::nftp::Info>(Arena*);
 template<> ::nftp::Log* Arena::CreateMaybeMessage<::nftp::Log>(Arena*);
-template<> ::nftp::Params* Arena::CreateMaybeMessage<::nftp::Params>(Arena*);
 template<> ::nftp::Port* Arena::CreateMaybeMessage<::nftp::Port>(Arena*);
 template<> ::nftp::Void* Arena::CreateMaybeMessage<::nftp::Void>(Arena*);
 }  // namespace protobuf
@@ -799,24 +799,24 @@ class Log : public ::google::protobuf::Message /* @@protoc_insertion_point(class
 };
 // -------------------------------------------------------------------
 
-class Params : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:nftp.Params) */ {
+class EvaluateRequest : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:nftp.EvaluateRequest) */ {
  public:
-  Params();
-  virtual ~Params();
+  EvaluateRequest();
+  virtual ~EvaluateRequest();
 
-  Params(const Params& from);
+  EvaluateRequest(const EvaluateRequest& from);
 
-  inline Params& operator=(const Params& from) {
+  inline EvaluateRequest& operator=(const EvaluateRequest& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  Params(Params&& from) noexcept
-    : Params() {
+  EvaluateRequest(EvaluateRequest&& from) noexcept
+    : EvaluateRequest() {
     *this = ::std::move(from);
   }
 
-  inline Params& operator=(Params&& from) noexcept {
+  inline EvaluateRequest& operator=(EvaluateRequest&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -826,34 +826,34 @@ class Params : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Params& default_instance();
+  static const EvaluateRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Params* internal_default_instance() {
-    return reinterpret_cast<const Params*>(
-               &_Params_default_instance_);
+  static inline const EvaluateRequest* internal_default_instance() {
+    return reinterpret_cast<const EvaluateRequest*>(
+               &_EvaluateRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     6;
 
-  void Swap(Params* other);
-  friend void swap(Params& a, Params& b) {
+  void Swap(EvaluateRequest* other);
+  friend void swap(EvaluateRequest& a, EvaluateRequest& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Params* New() const final {
-    return CreateMaybeMessage<Params>(NULL);
+  inline EvaluateRequest* New() const final {
+    return CreateMaybeMessage<EvaluateRequest>(NULL);
   }
 
-  Params* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<Params>(arena);
+  EvaluateRequest* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<EvaluateRequest>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const Params& from);
-  void MergeFrom(const Params& from);
+  void CopyFrom(const EvaluateRequest& from);
+  void MergeFrom(const EvaluateRequest& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -870,7 +870,7 @@ class Params : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Params* other);
+  void InternalSwap(EvaluateRequest* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -914,12 +914,27 @@ class Params : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_functionname();
   void set_allocated_functionname(::std::string* functionname);
 
-  // @@protoc_insertion_point(class_scope:nftp.Params)
+  // string ThreadID = 3;
+  void clear_threadid();
+  static const int kThreadIDFieldNumber = 3;
+  const ::std::string& threadid() const;
+  void set_threadid(const ::std::string& value);
+  #if LANG_CXX11
+  void set_threadid(::std::string&& value);
+  #endif
+  void set_threadid(const char* value);
+  void set_threadid(const char* value, size_t size);
+  ::std::string* mutable_threadid();
+  ::std::string* release_threadid();
+  void set_allocated_threadid(::std::string* threadid);
+
+  // @@protoc_insertion_point(class_scope:nftp.EvaluateRequest)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr functionid_;
   ::google::protobuf::internal::ArenaStringPtr functionname_;
+  ::google::protobuf::internal::ArenaStringPtr threadid_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_evaluator_2eproto::TableStruct;
 };
@@ -1397,112 +1412,165 @@ inline void Log::set_allocated_msg(::std::string* msg) {
 
 // -------------------------------------------------------------------
 
-// Params
+// EvaluateRequest
 
 // string FunctionID = 1;
-inline void Params::clear_functionid() {
+inline void EvaluateRequest::clear_functionid() {
   functionid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& Params::functionid() const {
-  // @@protoc_insertion_point(field_get:nftp.Params.FunctionID)
+inline const ::std::string& EvaluateRequest::functionid() const {
+  // @@protoc_insertion_point(field_get:nftp.EvaluateRequest.FunctionID)
   return functionid_.GetNoArena();
 }
-inline void Params::set_functionid(const ::std::string& value) {
+inline void EvaluateRequest::set_functionid(const ::std::string& value) {
   
   functionid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:nftp.Params.FunctionID)
+  // @@protoc_insertion_point(field_set:nftp.EvaluateRequest.FunctionID)
 }
 #if LANG_CXX11
-inline void Params::set_functionid(::std::string&& value) {
+inline void EvaluateRequest::set_functionid(::std::string&& value) {
   
   functionid_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:nftp.Params.FunctionID)
+  // @@protoc_insertion_point(field_set_rvalue:nftp.EvaluateRequest.FunctionID)
 }
 #endif
-inline void Params::set_functionid(const char* value) {
+inline void EvaluateRequest::set_functionid(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   functionid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:nftp.Params.FunctionID)
+  // @@protoc_insertion_point(field_set_char:nftp.EvaluateRequest.FunctionID)
 }
-inline void Params::set_functionid(const char* value, size_t size) {
+inline void EvaluateRequest::set_functionid(const char* value, size_t size) {
   
   functionid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:nftp.Params.FunctionID)
+  // @@protoc_insertion_point(field_set_pointer:nftp.EvaluateRequest.FunctionID)
 }
-inline ::std::string* Params::mutable_functionid() {
+inline ::std::string* EvaluateRequest::mutable_functionid() {
   
-  // @@protoc_insertion_point(field_mutable:nftp.Params.FunctionID)
+  // @@protoc_insertion_point(field_mutable:nftp.EvaluateRequest.FunctionID)
   return functionid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* Params::release_functionid() {
-  // @@protoc_insertion_point(field_release:nftp.Params.FunctionID)
+inline ::std::string* EvaluateRequest::release_functionid() {
+  // @@protoc_insertion_point(field_release:nftp.EvaluateRequest.FunctionID)
   
   return functionid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Params::set_allocated_functionid(::std::string* functionid) {
+inline void EvaluateRequest::set_allocated_functionid(::std::string* functionid) {
   if (functionid != NULL) {
     
   } else {
     
   }
   functionid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), functionid);
-  // @@protoc_insertion_point(field_set_allocated:nftp.Params.FunctionID)
+  // @@protoc_insertion_point(field_set_allocated:nftp.EvaluateRequest.FunctionID)
 }
 
 // string FunctionName = 2;
-inline void Params::clear_functionname() {
+inline void EvaluateRequest::clear_functionname() {
   functionname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& Params::functionname() const {
-  // @@protoc_insertion_point(field_get:nftp.Params.FunctionName)
+inline const ::std::string& EvaluateRequest::functionname() const {
+  // @@protoc_insertion_point(field_get:nftp.EvaluateRequest.FunctionName)
   return functionname_.GetNoArena();
 }
-inline void Params::set_functionname(const ::std::string& value) {
+inline void EvaluateRequest::set_functionname(const ::std::string& value) {
   
   functionname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:nftp.Params.FunctionName)
+  // @@protoc_insertion_point(field_set:nftp.EvaluateRequest.FunctionName)
 }
 #if LANG_CXX11
-inline void Params::set_functionname(::std::string&& value) {
+inline void EvaluateRequest::set_functionname(::std::string&& value) {
   
   functionname_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:nftp.Params.FunctionName)
+  // @@protoc_insertion_point(field_set_rvalue:nftp.EvaluateRequest.FunctionName)
 }
 #endif
-inline void Params::set_functionname(const char* value) {
+inline void EvaluateRequest::set_functionname(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   functionname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:nftp.Params.FunctionName)
+  // @@protoc_insertion_point(field_set_char:nftp.EvaluateRequest.FunctionName)
 }
-inline void Params::set_functionname(const char* value, size_t size) {
+inline void EvaluateRequest::set_functionname(const char* value, size_t size) {
   
   functionname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:nftp.Params.FunctionName)
+  // @@protoc_insertion_point(field_set_pointer:nftp.EvaluateRequest.FunctionName)
 }
-inline ::std::string* Params::mutable_functionname() {
+inline ::std::string* EvaluateRequest::mutable_functionname() {
   
-  // @@protoc_insertion_point(field_mutable:nftp.Params.FunctionName)
+  // @@protoc_insertion_point(field_mutable:nftp.EvaluateRequest.FunctionName)
   return functionname_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* Params::release_functionname() {
-  // @@protoc_insertion_point(field_release:nftp.Params.FunctionName)
+inline ::std::string* EvaluateRequest::release_functionname() {
+  // @@protoc_insertion_point(field_release:nftp.EvaluateRequest.FunctionName)
   
   return functionname_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Params::set_allocated_functionname(::std::string* functionname) {
+inline void EvaluateRequest::set_allocated_functionname(::std::string* functionname) {
   if (functionname != NULL) {
     
   } else {
     
   }
   functionname_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), functionname);
-  // @@protoc_insertion_point(field_set_allocated:nftp.Params.FunctionName)
+  // @@protoc_insertion_point(field_set_allocated:nftp.EvaluateRequest.FunctionName)
+}
+
+// string ThreadID = 3;
+inline void EvaluateRequest::clear_threadid() {
+  threadid_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& EvaluateRequest::threadid() const {
+  // @@protoc_insertion_point(field_get:nftp.EvaluateRequest.ThreadID)
+  return threadid_.GetNoArena();
+}
+inline void EvaluateRequest::set_threadid(const ::std::string& value) {
+  
+  threadid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:nftp.EvaluateRequest.ThreadID)
+}
+#if LANG_CXX11
+inline void EvaluateRequest::set_threadid(::std::string&& value) {
+  
+  threadid_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:nftp.EvaluateRequest.ThreadID)
+}
+#endif
+inline void EvaluateRequest::set_threadid(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  threadid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:nftp.EvaluateRequest.ThreadID)
+}
+inline void EvaluateRequest::set_threadid(const char* value, size_t size) {
+  
+  threadid_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:nftp.EvaluateRequest.ThreadID)
+}
+inline ::std::string* EvaluateRequest::mutable_threadid() {
+  
+  // @@protoc_insertion_point(field_mutable:nftp.EvaluateRequest.ThreadID)
+  return threadid_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* EvaluateRequest::release_threadid() {
+  // @@protoc_insertion_point(field_release:nftp.EvaluateRequest.ThreadID)
+  
+  return threadid_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void EvaluateRequest::set_allocated_threadid(::std::string* threadid) {
+  if (threadid != NULL) {
+    
+  } else {
+    
+  }
+  threadid_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), threadid);
+  // @@protoc_insertion_point(field_set_allocated:nftp.EvaluateRequest.ThreadID)
 }
 
 #ifdef __GNUC__

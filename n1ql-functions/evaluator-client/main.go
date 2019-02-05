@@ -13,7 +13,7 @@ import (
 
 func main() {
 	evaluatorClient, err := client.NewEvaluatorClient(&adapter.Configuration{
-		WorkersPerNode:   1,
+		WorkersPerNode:   2,
 		ThreadsPerWorker: 3,
 		HttpPort:         port.Port(9090),
 		NsServerUrl:      "http://locahost:9000",
@@ -53,8 +53,12 @@ func main() {
 			}
 
 		case "eval":
-			if err := evaluatorClient.Evaluate(f); err != nil {
-				log.Fatalf("Unable to evaluate, err : %v", err)
+			for i := 0; i < 10; i++ {
+				go func() {
+					if err := evaluatorClient.Evaluate(f); err != nil {
+						log.Fatalf("Unable to evaluate, err : %v", err)
+					}
+				}()
 			}
 		}
 	}

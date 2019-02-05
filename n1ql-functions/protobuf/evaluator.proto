@@ -32,9 +32,10 @@ message Log {
     string Msg = 2;
 }
 
-message Params {
+message EvaluateRequest {
     string FunctionID = 1;
     string FunctionName = 2;
+    string ThreadID = 3;
 }
 
 service Notification {
@@ -45,7 +46,7 @@ service Notification {
 service Evaluator {
     rpc Initialize (Config) returns (Info);
     rpc AddFunction (Function) returns (Info);
-    rpc Evaluate (Params) returns (Info);
+    rpc Evaluate (EvaluateRequest) returns (Info);
 }
 
 // Commands to run

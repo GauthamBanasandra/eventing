@@ -2,18 +2,26 @@ package client
 
 import "github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 
-type Scheduler struct {
-	resources map[string]*evaluator.Evaluator
+type Resource struct {
+	threadID          string
+	evaluatorInstance *evaluator.Evaluator
 }
 
-func NewScheduler() *Scheduler {
+type Scheduler struct {
+	Resources chan *Resource
+}
+
+func NewScheduler(numResources uint32) *Scheduler {
 	return &Scheduler{
-		resources: make(map[string]*evaluator.Evaluator),
+		Resources: make(chan *Resource, numResources),
 	}
 }
 
 func (s *Scheduler) AddResources(threadIDs []string, evaluatorInstance *evaluator.Evaluator) {
 	for i := 0; i < len(threadIDs); i++ {
-		s.resources[threadIDs[i]] = evaluatorInstance
+		s.Resources <- &Resource{
+			threadID:          threadIDs[i],
+			evaluatorInstance: evaluatorInstance,
+		}
 	}
 }

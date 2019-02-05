@@ -15,7 +15,9 @@ Info RuntimeBundle::AddFunction(const Function &function) {
   v8::Context::Scope context_scope(context);
 
   v8::Local<v8::String> source;
-  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate, function.code.c_str(), v8::NewStringType::kNormal), &source)) {
+  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate, function.code.c_str(),
+                                        v8::NewStringType::kNormal),
+                &source)) {
     return {true, "Unable to create source string"};
   }
 
@@ -43,7 +45,8 @@ RuntimeBundle::~RuntimeBundle() {
   isolate->Dispose();
 }
 
-Evaluator::Evaluator(const Constants &constants, NotificationClient &notification_client)
+Evaluator::Evaluator(const Constants &constants,
+                     NotificationClient &notification_client)
     : const_(constants), notification_client_(notification_client) {
   v8::V8::InitializeICUDefaultLocation("");
   platform_ = v8::platform::CreateDefaultPlatform();
@@ -86,17 +89,27 @@ Info Evaluator::AddFunction(const Function &function) {
   return {false};
 }
 
-Info Evaluator::Evaluate(const Params &params) {
+Info Evaluator::Evaluate(const EvaluateRequest &request) {
   notification_client_.Log("Received Evaluate");
-  /*v8::Locker locker(isolate_);
-  v8::Isolate::Scope isolate_scope(isolate_);
-  v8::HandleScope handle_scope(isolate_);
-  auto context = runtime_[params.function_id].context.Get(isolate_);
+  auto find_it = runtimes_.find(request.thread_id);
+  if (find_it == runtimes_.end()) {
+    return {true, "No runtime found for " + request.thread_id};
+  }
+
+  auto &runtime = find_it->second;
+  auto isolate = runtime.isolate;
+  v8::Locker locker(isolate);
+  v8::Isolate::Scope isolate_scope(isolate);
+  v8::HandleScope handle_scope(isolate);
+  auto context = runtime.contexts[request.function_id].Get(isolate);
   v8::Context::Scope context_scope(context);
 
   auto global = context->Global();
   v8::Local<v8::Value> function_val;
-  if (!TO_LOCAL(global->Get(context, v8::String::NewFromUtf8(isolate_, params.function_name.c_str())), &function_val)) {
+  if (!TO_LOCAL(
+          global->Get(context, v8::String::NewFromUtf8(
+                                   isolate, request.function_name.c_str())),
+          &function_val)) {
     return {true, "Unable to get function from global"};
   }
 
@@ -107,8 +120,7 @@ Info Evaluator::Evaluate(const Params &params) {
   }
 
   v8::String::Utf8Value result_utf8(result);
-  return {false, *result_utf8};*/
-  return {false, "ok"};
+  return {false, *result_utf8};
 }
 
 Info Evaluator::Compile(const std::string &code) {
@@ -119,7 +131,9 @@ Info Evaluator::Compile(const std::string &code) {
   v8::Context::Scope context_scope(context);
 
   v8::Local<v8::String> source;
-  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate_, code.c_str(), v8::NewStringType::kNormal), &source)) {
+  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate_, code.c_str(),
+                                        v8::NewStringType::kNormal),
+                &source)) {
     return {true, "Unable to create source string"};
   }
 

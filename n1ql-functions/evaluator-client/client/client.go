@@ -26,7 +26,7 @@ func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error)
 	evaluatorInstance := &EvaluatorClient{
 		config:     config,
 		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
-		scheduler:  NewScheduler(),
+		scheduler:  NewScheduler(config.ThreadsPerWorker * config.WorkersPerNode),
 	}
 	if err := evaluatorInstance.spawnComponents(); err != nil {
 		return nil, err
@@ -122,18 +122,22 @@ func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
 }
 
 func (e *EvaluatorClient) Evaluate(f *adapter.Function) error {
-	for evaluatorID, evaluatorInstance := range e.evaluators {
-		info, err := evaluatorInstance.Client.Evaluate(context.Background(), &nftp.Params{
-			FunctionID:   f.ID,
-			FunctionName: "f",
-		})
-		if err != nil {
-			return err
-		}
-		if info.IsFatal {
-			return errors.New(info.Message)
-		}
-		log.Printf("Got response : %v\t%v", evaluatorID, info.Message)
+	res := <-e.scheduler.Resources
+	defer func() {
+		e.scheduler.Resources <- res
+	}()
+
+	info, err := res.evaluatorInstance.Client.Evaluate(context.Background(), &nftp.EvaluateRequest{
+		FunctionID:   f.ID,
+		FunctionName: "f",
+		ThreadID:     res.threadID,
+	})
+	if err != nil {
+		return err
 	}
+	if info.IsFatal {
+		return errors.New(info.Message)
+	}
+	log.Printf("Got response : %v\t%v", res.threadID, info.Message)
 	return nil
 }

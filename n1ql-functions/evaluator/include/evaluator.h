@@ -6,10 +6,10 @@
 #define EVALUATOR_H
 
 #include <string>
-#include <unordered_map>
-#include <vector>
-#include <v8.h>
 #include <thread>
+#include <unordered_map>
+#include <v8.h>
+#include <vector>
 
 #include "constants.h"
 #include "function.h"
@@ -18,7 +18,7 @@
 
 using ThreadID = std::string;
 
-struct RuntimeBundle{
+struct RuntimeBundle {
   ~RuntimeBundle();
 
   Info AddFunction(const Function &function);
@@ -29,11 +29,12 @@ struct RuntimeBundle{
 
 class Evaluator {
 public:
-  explicit Evaluator(const Constants &constants, NotificationClient &notification_client);
+  explicit Evaluator(const Constants &constants,
+                     NotificationClient &notification_client);
   virtual ~Evaluator();
 
   Info AddFunction(const Function &function);
-  Info Evaluate(const Params& params);
+  Info Evaluate(const EvaluateRequest &request);
 
 private:
   Info Compile(const std::string &code);

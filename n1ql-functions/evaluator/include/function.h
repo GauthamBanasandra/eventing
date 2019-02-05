@@ -12,17 +12,22 @@
 using FunctionID = std::string;
 
 struct Function {
-  Function(const nftp::Function *function) : id(function->id()), code(function->code()) {}
+  Function(const nftp::Function *function)
+      : id(function->id()), code(function->code()) {}
 
   FunctionID id;
   std::string code;
 };
 
-struct Params {
-  Params(const nftp::Params *params) : function_id(params->functionid()), function_name(params->functionname()) {}
+struct EvaluateRequest {
+  EvaluateRequest(const nftp::EvaluateRequest *request)
+      : function_id(request->functionid()),
+        function_name(request->functionname()), thread_id(request->threadid()) {
+  }
 
   std::string function_id;
   std::string function_name;
+  std::string thread_id;
 };
 
 #endif // FUNCTION_H
