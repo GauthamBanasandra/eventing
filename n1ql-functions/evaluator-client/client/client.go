@@ -17,6 +17,7 @@ type EvaluatorClient struct {
 	NotificationServer *notificationServer
 
 	evaluators map[evaluator.ID]*evaluator.Evaluator
+	scheduler  *Scheduler
 	appServer  *server.Server
 	config     *adapter.Configuration
 }
@@ -25,6 +26,7 @@ func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error)
 	evaluatorInstance := &EvaluatorClient{
 		config:     config,
 		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
+		scheduler:  NewScheduler(),
 	}
 	if err := evaluatorInstance.spawnComponents(); err != nil {
 		return nil, err
@@ -69,25 +71,26 @@ func (e *EvaluatorClient) spawnEvaluators() error {
 	}
 
 	for i := uint32(0); i < e.config.WorkersPerNode; i++ {
-		evaluatorId, err := e.Babysitter.AddEvaluator()
+		evaluatorID, threadIDs, err := e.Babysitter.AddEvaluator()
 		if err != nil {
 			return err
 		}
 
-		evaluatorPort := e.NotificationServer.WaitForEvaluatorPort(evaluatorId)
+		evaluatorPort := e.NotificationServer.WaitForEvaluatorPort(evaluatorID)
 
-		evaluatorInstance, err := evaluator.New(evaluatorId, evaluatorPort)
+		evaluatorInstance, err := evaluator.New(evaluatorID, evaluatorPort)
 		if err != nil {
 			return err
 		}
+		e.scheduler.AddResources(threadIDs, evaluatorInstance)
 
 		response, err := evaluatorInstance.Client.Initialize(context.Background(),
 			e.config.ToNFTP())
 		if err != nil {
 			return err
 		}
-		log.Printf("Reponse : %s\t%v", evaluatorId, response)
-		e.evaluators[evaluatorId] = evaluatorInstance
+		log.Printf("Reponse : %s\t%v", evaluatorID, response)
+		e.evaluators[evaluatorID] = evaluatorInstance
 	}
 	return nil
 }

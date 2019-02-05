@@ -24,15 +24,15 @@ func New(config *adapter.Configuration, notificationPort port.Port) (*Babysitter
 	}, nil
 }
 
-func (b *Babysitter) AddEvaluator() (evaluator.ID, error) {
+func (b *Babysitter) AddEvaluator() (evaluator.ID, []string, error) {
 	invalidId := evaluator.ID("")
 	uuidGen, err := util.NewUUID()
 	if err != nil {
-		return invalidId, err
+		return invalidId, nil, err
 	}
 	threadsIDs, err := generateUUID(b.config.ThreadsPerWorker)
 	if err != nil {
-		return invalidId, err
+		return invalidId, nil, err
 	}
 
 	evaluatorId := evaluator.ID(uuidGen.Str())
@@ -47,11 +47,11 @@ func (b *Babysitter) AddEvaluator() (evaluator.ID, error) {
 
 	evaluatorProcess, err := process.NewProcess(evaluatorPath, args)
 	if err != nil {
-		return invalidId, err
+		return invalidId, nil, err
 	}
 
 	b.evaluators = append(b.evaluators, evaluatorProcess)
-	return evaluatorId, nil
+	return evaluatorId, threadsIDs, nil
 }
 
 func generateUUID(qty uint32) ([]string, error) {
