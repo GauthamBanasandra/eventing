@@ -1,4 +1,4 @@
-package configuration
+package adapter
 
 import (
 	"github.com/couchbase/eventing/gen/nftp/client"

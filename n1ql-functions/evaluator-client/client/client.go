@@ -5,24 +5,23 @@ import (
 	"errors"
 	"log"
 
+	"github.com/couchbase/eventing/gen/nftp/client"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/adapter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/function"
-	"github.com/couchbase/eventing/gen/nftp/client"
 )
 
 type EvaluatorClient struct {
 	Babysitter         *babysitter.Babysitter
 	NotificationServer *notificationServer
 
-	evaluators         map[evaluator.ID]*evaluator.Evaluator
-	appServer          *server.Server
-	config             *configuration.Configuration
+	evaluators map[evaluator.ID]*evaluator.Evaluator
+	appServer  *server.Server
+	config     *adapter.Configuration
 }
 
-func NewEvaluatorClient(config *configuration.Configuration) (*EvaluatorClient, error) {
+func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error) {
 	evaluatorInstance := &EvaluatorClient{
 		config:     config,
 		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
@@ -105,7 +104,7 @@ func (e *EvaluatorClient) Destroy() error {
 	return nil
 }
 
-func (e *EvaluatorClient) AddFunction(f *function.Function) error {
+func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
 	for _, evaluatorInstance := range e.evaluators {
 		info, err := evaluatorInstance.Client.AddFunction(context.Background(), f.ToNFTP())
 		log.Printf("Got response : %v", info)
@@ -119,10 +118,10 @@ func (e *EvaluatorClient) AddFunction(f *function.Function) error {
 	return nil
 }
 
-func (e *EvaluatorClient) Evaluate(f *function.Function) error {
+func (e *EvaluatorClient) Evaluate(f *adapter.Function) error {
 	for evaluatorID, evaluatorInstance := range e.evaluators {
 		info, err := evaluatorInstance.Client.Evaluate(context.Background(), &nftp.Params{
-			FunctionID: f.ID,
+			FunctionID:   f.ID,
 			FunctionName: "f",
 		})
 		if err != nil {

@@ -5,15 +5,14 @@ import (
 	"log"
 	"os"
 
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/adapter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/client"
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"strings"
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/function"
 )
 
 func main() {
-	evaluatorClient, err := client.NewEvaluatorClient(&configuration.Configuration{
+	evaluatorClient, err := client.NewEvaluatorClient(&adapter.Configuration{
 		WorkersPerNode:   1,
 		ThreadsPerWorker: 3,
 		HttpPort:         port.Port(9090),
@@ -29,7 +28,7 @@ func main() {
 			return value;
 		}
 		f();`
-	f, err := function.New(code)
+	f, err := adapter.NewFunction(code)
 	if err != nil {
 		log.Fatalf("Unable to create Function, err : %v", err)
 	}

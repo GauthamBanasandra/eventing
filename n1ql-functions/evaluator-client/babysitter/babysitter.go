@@ -1,7 +1,7 @@
 package babysitter
 
 import (
-	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/configuration"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/adapter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/process"
@@ -12,12 +12,12 @@ import (
 const evaluatorPath = "/Users/gautham/projects/github/couchbase/mad-hatter/cmake-build-debug/goproj/src/github.com/couchbase/eventing/n1ql-functions/evaluator/evaluator"
 
 type Babysitter struct {
-	config           *configuration.Configuration
+	config           *adapter.Configuration
 	notificationPort port.Port
 	evaluators       []*process.Process
 }
 
-func New(config *configuration.Configuration, notificationPort port.Port) (*Babysitter, error) {
+func New(config *adapter.Configuration, notificationPort port.Port) (*Babysitter, error) {
 	return &Babysitter{
 		config:           config,
 		notificationPort: notificationPort,
