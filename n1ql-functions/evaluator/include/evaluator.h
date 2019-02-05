@@ -16,11 +16,15 @@
 #include "info.h"
 #include "notification-client.h"
 
+using ThreadID = std::string;
+
 struct RuntimeBundle{
   ~RuntimeBundle();
 
+  Info AddFunction(const Function &function);
+
   v8::Isolate *isolate;
-  v8::Persistent<v8::Context> context;
+  std::unordered_map<FunctionID, v8::Persistent<v8::Context>> contexts;
 };
 
 class Evaluator {
@@ -32,12 +36,14 @@ public:
   Info Evaluate(const Params& params);
 
 private:
+  Info Compile(const std::string &code);
+
   const Constants &const_;
   NotificationClient &notification_client_;
   v8::Platform *platform_;
   v8::Isolate *isolate_;
   v8::Isolate::CreateParams isolate_params_;
-  std::unordered_map<std::string, RuntimeBundle> runtime_;
+  std::unordered_map<ThreadID, RuntimeBundle> runtimes_;
 };
 
 #endif // EVALUATOR_H

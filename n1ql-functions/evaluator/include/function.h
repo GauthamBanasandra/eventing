@@ -9,10 +9,12 @@
 
 #include "evaluator.pb.h"
 
+using FunctionID = std::string;
+
 struct Function {
   Function(const nftp::Function *function) : id(function->id()), code(function->code()) {}
 
-  std::string id;
+  FunctionID id;
   std::string code;
 };
 

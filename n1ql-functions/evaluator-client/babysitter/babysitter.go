@@ -30,18 +30,38 @@ func (b *Babysitter) AddEvaluator() (evaluator.ID, error) {
 	if err != nil {
 		return invalidId, err
 	}
+	threadsIDs, err := generateUUID(b.config.ThreadsPerWorker)
+	if err != nil {
+		return invalidId, err
+	}
 
 	evaluatorId := evaluator.ID(uuidGen.Str())
-	evaluatorProcess, err := process.NewProcess(evaluatorPath,
-		[]string{
-			b.notificationPort.ToString(),
-			string(evaluatorId),
-			strconv.Itoa(int(b.config.ThreadsPerWorker)),
-		})
+	args := []string{
+		b.notificationPort.ToString(),
+		string(evaluatorId),
+		strconv.Itoa(int(b.config.ThreadsPerWorker)),
+	}
+	for i := 0; i < len(threadsIDs); i++ {
+		args = append(args, threadsIDs[i])
+	}
+
+	evaluatorProcess, err := process.NewProcess(evaluatorPath, args)
 	if err != nil {
 		return invalidId, err
 	}
 
 	b.evaluators = append(b.evaluators, evaluatorProcess)
 	return evaluatorId, nil
+}
+
+func generateUUID(qty uint32) ([]string, error) {
+	var uuids []string
+	for i := uint32(0); i < qty; i++ {
+		uuidGen, err := util.NewUUID()
+		if err != nil {
+			return nil, err
+		}
+		uuids = append(uuids, uuidGen.Str())
+	}
+	return uuids, nil
 }

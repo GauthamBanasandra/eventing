@@ -7,8 +7,40 @@
 #include "evaluator.h"
 #include "utils.h"
 
+Info RuntimeBundle::AddFunction(const Function &function) {
+  v8::Locker locker(isolate);
+  v8::Isolate::Scope isolate_scope(isolate);
+  v8::HandleScope handle_scope(isolate);
+  auto context = v8::Context::New(isolate);
+  v8::Context::Scope context_scope(context);
+
+  v8::Local<v8::String> source;
+  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate, function.code.c_str(), v8::NewStringType::kNormal), &source)) {
+    return {true, "Unable to create source string"};
+  }
+
+  v8::Local<v8::Script> script;
+  if (!TO_LOCAL(v8::Script::Compile(context, source), &script)) {
+    return {true, "Unable to compile source"};
+  }
+
+  v8::Local<v8::Value> result;
+  v8::TryCatch try_catch(isolate);
+  if (!TO_LOCAL(script->Run(context), &result)) {
+    if (try_catch.HasCaught()) {
+      return {true, "Syntax error"};
+    }
+    return {true, "Unable to run script"};
+  }
+  contexts[function.id].Reset(isolate, context);
+  return {false};
+}
+
 RuntimeBundle::~RuntimeBundle() {
-  context.Reset();
+  for (auto &context : contexts) {
+    context.second.Reset();
+  }
+  isolate->Dispose();
 }
 
 Evaluator::Evaluator(const Constants &constants, NotificationClient &notification_client)
@@ -20,13 +52,16 @@ Evaluator::Evaluator(const Constants &constants, NotificationClient &notificatio
 
   isolate_params_.array_buffer_allocator =
       v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+
   isolate_ = v8::Isolate::New(isolate_params_);
+  for (const auto &thread_id : const_.threads_ids) {
+    runtimes_[thread_id].isolate = v8::Isolate::New(isolate_params_);
+  }
   notification_client_.Log("Initialized isolate");
 }
 
 Evaluator::~Evaluator() {
-  for (auto &runtime : runtime_) {
-    runtime.second.context.Reset();
+  for (auto &runtime : runtimes_) {
     runtime.second.isolate->Dispose();
   }
 
@@ -37,44 +72,23 @@ Evaluator::~Evaluator() {
 }
 
 Info Evaluator::AddFunction(const Function &function) {
-  v8::Locker locker(isolate_);
-  notification_client_.Log("Adding Function");
-  v8::Isolate::Scope isolate_scope(isolate_);
-  v8::HandleScope handle_scope(isolate_);
-  auto context = v8::Context::New(isolate_);
-  v8::Context::Scope context_scope(context);
-
-  v8::Local<v8::String> source;
-  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate_, function.code.c_str(),
-                                        v8::NewStringType::kNormal),
-                &source)) {
-    return {true, "Unable to create source string"};
+  auto info = Compile(function.code);
+  if (info.is_fatal) {
+    return info;
   }
 
-  v8::Local<v8::Script> script;
-  if (!TO_LOCAL(v8::Script::Compile(context, source), &script)) {
-    return {true, "Unable to compile source"};
-  }
-
-  v8::Local<v8::Value> result;
-  v8::TryCatch try_catch(isolate_);
-  if (!TO_LOCAL(script->Run(context), &result)) {
-    if (try_catch.HasCaught()) {
-      return {true, "Syntax error"};
+  for (auto &runtime : runtimes_) {
+    info = runtime.second.AddFunction(function);
+    if (info.is_fatal) {
+      return info;
     }
-    return {true, "Unable to run script"};
   }
-
-  v8::String::Utf8Value utf8_result(result);
-  std::cout << *utf8_result << std::endl;
-  runtime_[function.id].isolate = isolate_;
-  runtime_[function.id].context.Reset(isolate_, context);
-  return {false, *utf8_result};
+  return {false};
 }
 
 Info Evaluator::Evaluate(const Params &params) {
   notification_client_.Log("Received Evaluate");
-  v8::Locker locker(isolate_);
+  /*v8::Locker locker(isolate_);
   v8::Isolate::Scope isolate_scope(isolate_);
   v8::HandleScope handle_scope(isolate_);
   auto context = runtime_[params.function_id].context.Get(isolate_);
@@ -93,5 +107,34 @@ Info Evaluator::Evaluate(const Params &params) {
   }
 
   v8::String::Utf8Value result_utf8(result);
-  return {false, *result_utf8};
+  return {false, *result_utf8};*/
+  return {false, "ok"};
+}
+
+Info Evaluator::Compile(const std::string &code) {
+  v8::Locker locker(isolate_);
+  v8::Isolate::Scope isolate_scope(isolate_);
+  v8::HandleScope handle_scope(isolate_);
+  auto context = v8::Context::New(isolate_);
+  v8::Context::Scope context_scope(context);
+
+  v8::Local<v8::String> source;
+  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate_, code.c_str(), v8::NewStringType::kNormal), &source)) {
+    return {true, "Unable to create source string"};
+  }
+
+  v8::Local<v8::Script> script;
+  if (!TO_LOCAL(v8::Script::Compile(context, source), &script)) {
+    return {true, "Unable to compile source"};
+  }
+
+  v8::Local<v8::Value> result;
+  v8::TryCatch try_catch(isolate_);
+  if (!TO_LOCAL(script->Run(context), &result)) {
+    if (try_catch.HasCaught()) {
+      return {true, "Syntax error"};
+    }
+    return {true, "Unable to run script"};
+  }
+  return {false};
 }

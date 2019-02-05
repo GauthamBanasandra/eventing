@@ -55,7 +55,8 @@ ADD_EXECUTABLE(evaluator
         src/main.cc
         src/evaluator-server.cc
         src/evaluator.cc
-        src/notification-client.cc)
+        src/notification-client.cc
+        src/constants.cc)
 
 TARGET_LINK_LIBRARIES(evaluator
         ${LIB_GRPC}
