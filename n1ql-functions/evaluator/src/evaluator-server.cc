@@ -34,7 +34,7 @@ void EvaluatorServer::Run(const std::string &hostname) {
   builder.AddListeningPort(hostname, grpc::InsecureServerCredentials(),
                            &selected_port);
   builder.RegisterService(this);
-  std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
+  server_ = builder.BuildAndStart();
   std::cout << "Server listening on " << selected_port << std::endl;
 
   grpc::ClientContext context;
@@ -45,7 +45,7 @@ void EvaluatorServer::Run(const std::string &hostname) {
   nftp::Void void_resp;
   auto status = notification_client_->NotifyPort(&context, port, &void_resp);
   std::cout << "status : " << status.ok() << std::endl;
-  server->Wait();
+  server_->Wait();
 }
 
 grpc::Status EvaluatorServer::AddFunction(grpc::ServerContext *context,
@@ -63,5 +63,12 @@ grpc::Status EvaluatorServer::Evaluate(grpc::ServerContext *context,
   auto info = evaluator_.Evaluate({request});
   response->set_isfatal(info.is_fatal);
   response->set_message(info.msg);
+  return grpc::Status::OK;
+}
+
+grpc::Status EvaluatorServer::Stop(grpc::ServerContext *context,
+                                   const nftp::Void *request,
+                                   nftp::Void *response) {
+  server_->Shutdown();
   return grpc::Status::OK;
 }

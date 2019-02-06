@@ -4,11 +4,11 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/adapter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/client"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/port"
-	"strings"
 )
 
 func main() {
@@ -55,9 +55,11 @@ func main() {
 		case "eval":
 			for i := 0; i < 10; i++ {
 				go func() {
-					if err := evaluatorClient.Evaluate(f); err != nil {
+					result, err := evaluatorClient.Evaluate(f)
+					if err != nil {
 						log.Fatalf("Unable to evaluate, err : %v", err)
 					}
+					log.Printf("Evaluate response : %v", *result)
 				}()
 			}
 		}

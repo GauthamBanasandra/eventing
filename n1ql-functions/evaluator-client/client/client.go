@@ -1,9 +1,7 @@
 package client
 
 import (
-	"context"
 	"errors"
-	"log"
 
 	"github.com/couchbase/eventing/gen/nftp/client"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/adapter"
@@ -84,12 +82,11 @@ func (e *EvaluatorClient) spawnEvaluators() error {
 		}
 		e.scheduler.AddResources(threadIDs, evaluatorInstance)
 
-		response, err := evaluatorInstance.Client.Initialize(context.Background(),
-			e.config.ToNFTP())
+		// TODO : Remove this
+		err = evaluatorInstance.Initialize(e.config)
 		if err != nil {
 			return err
 		}
-		log.Printf("Reponse : %s\t%v", evaluatorID, response)
 		e.evaluators[evaluatorID] = evaluatorInstance
 	}
 	return nil
@@ -104,40 +101,31 @@ func (e *EvaluatorClient) Destroy() error {
 	if err := e.NotificationServer.Stop(); err != nil {
 		return err
 	}
+	e.scheduler.FreeResources()
+	//for _, evaluatorInstance := range e.evaluators {
+	//	go evaluatorInstance.Destroy()
+	//}
 	return nil
 }
 
 func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
 	for _, evaluatorInstance := range e.evaluators {
-		info, err := evaluatorInstance.Client.AddFunction(context.Background(), f.ToNFTP())
-		log.Printf("Got response : %v", info)
-		if err != nil {
+		if err := evaluatorInstance.AddFunction(f); err != nil {
 			return err
-		}
-		if info.IsFatal {
-			return errors.New(info.Message)
 		}
 	}
 	return nil
 }
 
-func (e *EvaluatorClient) Evaluate(f *adapter.Function) error {
+func (e *EvaluatorClient) Evaluate(f *adapter.Function) (*string, error) {
 	res := <-e.scheduler.Resources
 	defer func() {
 		e.scheduler.Resources <- res
 	}()
 
-	info, err := res.evaluatorInstance.Client.Evaluate(context.Background(), &nftp.EvaluateRequest{
+	return res.evaluatorInstance.Evaluate(&nftp.EvaluateRequest{
 		FunctionID:   f.ID,
 		FunctionName: "f",
 		ThreadID:     res.threadID,
 	})
-	if err != nil {
-		return err
-	}
-	if info.IsFatal {
-		return errors.New(info.Message)
-	}
-	log.Printf("Got response : %v\t%v", res.threadID, info.Message)
-	return nil
 }

@@ -26,12 +26,14 @@ public:
   grpc::Status Evaluate(grpc::ServerContext *context,
                         const nftp::EvaluateRequest *request,
                         nftp::Info *response) override;
+  grpc::Status Stop(grpc::ServerContext *context, const nftp::Void *request, nftp::Void *response) override;
 
   void Run(const std::string &hostname);
 
 private:
   Evaluator &evaluator_;
   const Constants &const_;
+  std::unique_ptr<grpc::Server> server_;
   std::unique_ptr<nftp::Notification::Stub> notification_client_;
 };
 

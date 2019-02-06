@@ -47,6 +47,7 @@ service Evaluator {
     rpc Initialize (Config) returns (Info);
     rpc AddFunction (Function) returns (Info);
     rpc Evaluate (EvaluateRequest) returns (Info);
+    rpc Stop (Void) returns (Void);
 }
 
 // Commands to run

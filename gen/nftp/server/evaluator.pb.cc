@@ -271,14 +271,15 @@ void AddDescriptorsImpl() {
       "onID\030\001 \001(\t\022\024\n\014FunctionName\030\002 \001(\t\022\020\n\010Thre"
       "adID\030\003 \001(\t2U\n\014Notification\022$\n\nNotifyPort"
       "\022\n.nftp.Port\032\n.nftp.Void\022\037\n\006Logger\022\t.nft"
-      "p.Log\032\n.nftp.Void2\215\001\n\tEvaluator\022&\n\nIniti"
+      "p.Log\032\n.nftp.Void2\255\001\n\tEvaluator\022&\n\nIniti"
       "alize\022\014.nftp.Config\032\n.nftp.Info\022)\n\013AddFu"
       "nction\022\016.nftp.Function\032\n.nftp.Info\022-\n\010Ev"
       "aluate\022\025.nftp.EvaluateRequest\032\n.nftp.Inf"
-      "ob\006proto3"
+      "o\022\036\n\004Stop\022\n.nftp.Void\032\n.nftp.Voidb\006proto"
+      "3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 609);
+      descriptor, 641);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "evaluator.proto", &protobuf_RegisterTypes);
 }
