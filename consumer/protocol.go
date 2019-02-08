@@ -53,6 +53,7 @@ const (
 	v8WorkerExecutionStats
 	v8WorkerCompile
 	v8WorkerLcbExceptions
+	v8WorkerCurlLatencyStats
 )
 
 const (
@@ -90,6 +91,7 @@ const (
 	compileInfo
 	queueSize
 	lcbExceptions
+	curlLatencyStats
 )
 
 const (
@@ -293,7 +295,7 @@ func (c *Consumer) makeDcpPayload(key, value []byte) (encodedPayload []byte, bui
 
 func (c *Consumer) makeV8InitPayload(appName, debuggerPort, currHost, eventingDir, eventingPort,
 	eventingSSLPort, kvHostPort, depCfg string, capacity, executionTimeout, checkpointInterval int,
-	skipLcbBootstrap bool, curlTimeout int64, timerContextSize int64) (encodedPayload []byte, builder *flatbuffers.Builder) {
+	skipLcbBootstrap bool, timerContextSize int64) (encodedPayload []byte, builder *flatbuffers.Builder) {
 	builder = c.getBuilder()
 
 	app := builder.CreateString(appName)
@@ -324,7 +326,6 @@ func (c *Consumer) makeV8InitPayload(appName, debuggerPort, currHost, eventingDi
 	payload.PayloadAddLcbInstCapacity(builder, int32(capacity))
 	payload.PayloadAddExecutionTimeout(builder, int32(executionTimeout))
 	payload.PayloadAddCheckpointInterval(builder, int32(checkpointInterval))
-	payload.PayloadAddCurlTimeout(builder, curlTimeout)
 	payload.PayloadAddTimerContextSize(builder, timerContextSize)
 	payload.PayloadAddFunctionInstanceId(builder, fiid)
 	payload.PayloadAddSkipLcbBootstrap(builder, lcb[0])
@@ -387,6 +388,16 @@ func (c *Consumer) routeResponse(msgType, opcode int8, msg string) {
 			err := json.Unmarshal([]byte(msg), &c.latencyStats)
 			if err != nil {
 				logging.Errorf("%s [%s:%s:%d] Failed to unmarshal latency stats, msg: %v err: %v",
+					logPrefix, c.workerName, c.tcpPort, c.Pid(), msg, err)
+			}
+		case curlLatencyStats:
+			c.workerRespMainLoopTs.Store(time.Now())
+
+			c.statsRWMutex.Lock()
+			defer c.statsRWMutex.Unlock()
+			err := json.Unmarshal([]byte(msg), &c.curlLatencyStats)
+			if err != nil {
+				logging.Errorf("%s [%s:%s:%d] Failed to unmarshal curl latency stats, msg: %v err: %v",
 					logPrefix, c.workerName, c.tcpPort, c.Pid(), msg, err)
 			}
 		case failureStats:

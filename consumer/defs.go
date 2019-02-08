@@ -134,7 +134,6 @@ type Consumer struct {
 	cppThrPartitionMap    map[int][]uint16
 	cppWorkerThrCount     int // No. of worker threads per CPP worker process
 	crcTable              *crc32.Table
-	curlTimeout           int64    // curl operation timeout in ms
 	debugConn             net.Conn // Interface to support communication between Go and C++ worker spawned for debugging
 	debugFeedbackConn     net.Conn
 	debugFeedbackListener net.Listener
@@ -225,6 +224,7 @@ type Consumer struct {
 	executionStats    map[string]interface{} // Access controlled by statsRWMutex
 	failureStats      map[string]interface{} // Access controlled by statsRWMutex
 	latencyStats      map[string]uint64      // Access controlled by statsRWMutex
+	curlLatencyStats  map[string]uint64      // Access controlled by statsRWMutex
 	lcbExceptionStats map[string]uint64      // Access controlled by statsRWMutex
 	statsRWMutex      *sync.RWMutex
 

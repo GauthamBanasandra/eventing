@@ -388,6 +388,19 @@ func (c *Consumer) GetLatencyStats() map[string]uint64 {
 	return latencyStats
 }
 
+func (c *Consumer) GetCurlLatencyStats() map[string]uint64 {
+	c.statsRWMutex.RLock()
+	defer c.statsRWMutex.RUnlock()
+
+	latencyStats := make(map[string]uint64)
+
+	for k, v := range c.curlLatencyStats {
+		latencyStats[k] = v
+	}
+
+	return latencyStats
+}
+
 // GetExecutionStats returns OnUpdate/OnDelete success/failure stats for event handlers from cpp world
 func (c *Consumer) GetExecutionStats() map[string]interface{} {
 	c.statsRWMutex.RLock()
@@ -574,7 +587,7 @@ func (c *Consumer) SpawnCompilationWorker(appCode, appContent, appName, eventing
 	c.handlerFooters = handlerFooters
 	// Framing bare minimum V8 worker init payload
 	payload, pBuilder := c.makeV8InitPayload(appName, c.debuggerPort, util.Localhost(), "", eventingPort, "",
-		"", appContent, 5, 10, 10*1000, true, 500, 1024)
+		"", appContent, 5, 10, 10*1000, true, 1024)
 
 	c.sendInitV8Worker(payload, false, pBuilder)
 
@@ -606,7 +619,6 @@ func (c *Consumer) initConsumer(appName string) {
 	c.lcbInstCapacity = 1
 	c.socketWriteBatchSize = 1
 	c.cppWorkerThrCount = 1
-	c.curlTimeout = 1000
 	c.ipcType = "af_inet"
 
 	c.connMutex = &sync.RWMutex{}
