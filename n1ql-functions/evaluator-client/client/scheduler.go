@@ -1,6 +1,9 @@
 package client
 
-import "github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
+import (
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/adapter"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
+)
 
 type Resource struct {
 	threadID          string
@@ -8,14 +11,14 @@ type Resource struct {
 }
 
 type Scheduler struct {
-	Resources    chan *Resource
-	numResources uint32
+	Resources chan *Resource
+	config    *adapter.Configuration
 }
 
-func NewScheduler(numResources uint32) *Scheduler {
+func NewScheduler(config *adapter.Configuration) *Scheduler {
 	return &Scheduler{
-		Resources:    make(chan *Resource, numResources),
-		numResources: numResources,
+		Resources: make(chan *Resource, config.ThreadsPerWorker*config.WorkersPerNode),
+		config:    config,
 	}
 }
 
@@ -29,8 +32,8 @@ func (s *Scheduler) AddResources(threadIDs []string, evaluatorInstance *evaluato
 }
 
 func (s *Scheduler) FreeResources() {
-	for i := uint32(0); i < s.numResources; i++ {
+	numResources := s.config.WorkersPerNode * s.config.ThreadsPerWorker
+	for i := uint32(0); i < numResources; i++ {
 		<-s.Resources
 	}
-	s.numResources = 0
 }

@@ -8,14 +8,16 @@ import (
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/evaluator"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/server"
+	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/storage"
 )
 
 type EvaluatorClient struct {
 	Babysitter         *babysitter.Babysitter
 	NotificationServer *notificationServer
 
-	evaluators map[evaluator.ID]*evaluator.Evaluator
+	evaluators map[evaluator.ID]*evaluator.Evaluator // TODO : Turn this into a channel
 	scheduler  *Scheduler
+	storage    *storage.Storage
 	appServer  *server.Server
 	config     *adapter.Configuration
 }
@@ -24,7 +26,7 @@ func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error)
 	evaluatorInstance := &EvaluatorClient{
 		config:     config,
 		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
-		scheduler:  NewScheduler(config.ThreadsPerWorker * config.WorkersPerNode),
+		scheduler:  NewScheduler(config),
 	}
 	if err := evaluatorInstance.spawnComponents(); err != nil {
 		return nil, err
@@ -37,7 +39,8 @@ func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error)
 }
 
 func (e *EvaluatorClient) spawnAppServer() {
-	e.appServer = server.NewServer(":" + e.config.HttpPort.ToString())
+	address := ":" + e.config.HttpPort.ToString()
+	e.appServer = server.NewServer(address, e.storage)
 	go e.appServer.Start()
 }
 
@@ -57,6 +60,8 @@ func (e *EvaluatorClient) spawnComponents() error {
 	if err != nil {
 		return err
 	}
+	// TODO : Set CBAUTH_REVRPC_URL
+	//e.storage = storage.New(e.AddFunction)
 	return nil
 }
 
