@@ -60,8 +60,7 @@ func (e *EvaluatorClient) spawnComponents() error {
 	if err != nil {
 		return err
 	}
-	// TODO : Set CBAUTH_REVRPC_URL
-	//e.storage = storage.New(e.AddFunction)
+	e.storage = storage.New(e.AddFunction)
 	return nil
 }
 

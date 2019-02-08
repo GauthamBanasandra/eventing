@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"encoding/json"
 	"log"
 
 	"github.com/couchbase/cbauth/metakv"
@@ -13,13 +14,13 @@ const (
 )
 
 type Storage struct {
-	AddFunction  func(function *adapter.Function) error
+	addFunction  func(function *adapter.Function) error
 	stopObserver chan struct{}
 }
 
 func New(addFunction func(function *adapter.Function) error) *Storage {
 	s := &Storage{
-		AddFunction:  addFunction,
+		addFunction:  addFunction,
 		stopObserver: make(chan struct{}),
 	}
 	s.observeFunctionsPath()
@@ -28,6 +29,19 @@ func New(addFunction func(function *adapter.Function) error) *Storage {
 
 func (s *Storage) Stop() {
 	s.stopObserver <- struct{}{}
+}
+
+func (s *Storage) AddFunction(function *adapter.Function) error {
+	data, err := json.Marshal(function)
+	if err != nil {
+		return err
+	}
+
+	err = metakv.Set(FunctionsPath+function.Name, data, nil)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *Storage) observeFunctionsPath() {
@@ -45,6 +59,20 @@ func (s *Storage) observeFunctionsPath() {
 }
 
 func (s *Storage) handleFunctionsPath(path string, value []byte, rev interface{}) error {
+	log.Printf("%s", path)
+	if value == nil {
+		// TODO : Handle Function delete
+		return nil
+	}
 
+	function := &adapter.Function{}
+	err := json.Unmarshal(value, function)
+	if err != nil {
+		return err
+	}
+	err = s.addFunction(function)
+	if err != nil {
+		return err
+	}
 	return nil
 }

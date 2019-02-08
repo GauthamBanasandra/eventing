@@ -6,19 +6,28 @@ import (
 )
 
 type Function struct {
-	ID   string
-	Code string
+	Name string `json:"name"`
+	ID   string `json:"id"`
+	Code string `json:"code"`
 }
 
-func NewFunction(code string) (*Function, error) {
+func NewEmptyFunction() (*Function, error) {
 	uuidGen, err := util.NewUUID()
 	if err != nil {
 		return nil, err
 	}
 	return &Function{
-		ID:   uuidGen.Str(),
-		Code: code,
+		ID: uuidGen.Str(),
 	}, nil
+}
+
+func NewFunction(code string) (*Function, error) {
+	function, err := NewEmptyFunction()
+	if err != nil {
+		return nil, err
+	}
+	function.Code = code
+	return function, nil
 }
 
 func (f *Function) ToNFTP() *nftp.Function {
