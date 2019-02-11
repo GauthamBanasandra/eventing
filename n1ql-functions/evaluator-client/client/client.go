@@ -15,7 +15,7 @@ type EvaluatorClient struct {
 	Babysitter         *babysitter.Babysitter
 	NotificationServer *notificationServer
 
-	evaluators map[evaluator.ID]*evaluator.Evaluator // TODO : Turn this into a channel
+	evaluators chan *evaluator.Evaluator // TODO : Turn this into a channel
 	scheduler  *Scheduler
 	storage    *storage.Storage
 	appServer  *server.Server
@@ -25,7 +25,7 @@ type EvaluatorClient struct {
 func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error) {
 	evaluatorInstance := &EvaluatorClient{
 		config:     config,
-		evaluators: make(map[evaluator.ID]*evaluator.Evaluator),
+		evaluators: make(chan *evaluator.Evaluator, config.WorkersPerNode),
 		scheduler:  NewScheduler(config),
 	}
 	if err := evaluatorInstance.spawnComponents(); err != nil {
@@ -91,7 +91,7 @@ func (e *EvaluatorClient) spawnEvaluators() error {
 		if err != nil {
 			return err
 		}
-		e.evaluators[evaluatorID] = evaluatorInstance
+		e.evaluators <- evaluatorInstance
 	}
 	return nil
 }
@@ -113,8 +113,18 @@ func (e *EvaluatorClient) Destroy() error {
 }
 
 func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
-	for _, evaluatorInstance := range e.evaluators {
-		if err := evaluatorInstance.AddFunction(f); err != nil {
+	var evaluators []*evaluator.Evaluator
+	defer func() {
+		for i := 0; i < len(evaluators); i++ {
+			e.evaluators <- evaluators[i]
+		}
+	}()
+
+	for i := uint32(0); i < e.config.WorkersPerNode; i++ {
+		evaluatorInstance := <-e.evaluators
+		err := evaluatorInstance.AddFunction(f)
+		evaluators = append(evaluators, evaluatorInstance)
+		if err != nil {
 			return err
 		}
 	}
