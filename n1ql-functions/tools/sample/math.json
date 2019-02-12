@@ -1,0 +1,4 @@
+{
+  "name": "math",
+  "code": "function add() {\n    let data = 2 + 2;\n    return data;\n}"
+}
