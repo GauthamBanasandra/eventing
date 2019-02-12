@@ -13,7 +13,7 @@ import (
 
 func main() {
 	evaluatorClient, err := client.NewEvaluatorClient(&adapter.Configuration{
-		WorkersPerNode:   2,
+		WorkersPerNode:   1,
 		ThreadsPerWorker: 3,
 		HttpPort:         port.Port(9090),
 		NsServerUrl:      "http://locahost:9000",
@@ -24,11 +24,11 @@ func main() {
 
 	code := `
 		function f(){
+			throw 'some error';
 			let value = 2 + 2;
 			return value;
-		}
-		f();`
-	f, err := adapter.NewFunction(code)
+		}`
+	f, err := adapter.NewFunction("another-math", code)
 	if err != nil {
 		log.Fatalf("Unable to create Function, err : %v", err)
 	}
@@ -53,11 +53,18 @@ func main() {
 			}
 
 		case "eval":
+			args, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatalf("Unable to read eval args, err : %v", err)
+			}
+			args = strings.Replace(args, "\n", "", -1)
+			evalArgs := strings.Split(args, " ")
 			for i := 0; i < 10; i++ {
 				go func() {
-					result, err := evaluatorClient.Evaluate(f)
+					result, err := evaluatorClient.Evaluate(evalArgs[0], evalArgs[1])
 					if err != nil {
-						log.Fatalf("Unable to evaluate, err : %v", err)
+						log.Printf("Unable to evaluate, err : %v", err)
+						return
 					}
 					log.Printf("Evaluate response : %v", *result)
 				}()

@@ -107,15 +107,23 @@ Info Evaluator::Evaluate(const EvaluateRequest &request) {
   auto global = context->Global();
   v8::Local<v8::Value> function_val;
   if (!TO_LOCAL(
-          global->Get(context, v8::String::NewFromUtf8(
-                                   isolate, request.function_name.c_str())),
-          &function_val)) {
+      global->Get(context, v8::String::NewFromUtf8(
+          isolate, request.function_name.c_str())),
+      &function_val)) {
     return {true, "Unable to get function from global"};
   }
 
   auto function = function_val.As<v8::Function>();
+  if (function->IsNullOrUndefined()) {
+    return {true, "Function " + request.function_name + " not found"};
+  }
+
   v8::Local<v8::Value> result;
+  v8::TryCatch try_catch(isolate);
   if (!TO_LOCAL(function->Call(context, global, 0, nullptr), &result)) {
+    if (try_catch.HasCaught()) {
+      return {true, "exception thrown"};
+    }
     return {true, "Unable to call function"};
   }
 

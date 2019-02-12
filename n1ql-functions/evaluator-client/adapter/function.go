@@ -5,6 +5,8 @@ import (
 	"github.com/couchbase/eventing/util"
 )
 
+// TODO : Rename this to Library
+
 type Function struct {
 	Name string `json:"name"`
 	ID   string `json:"id"`
@@ -21,11 +23,12 @@ func NewEmptyFunction() (*Function, error) {
 	}, nil
 }
 
-func NewFunction(code string) (*Function, error) {
+func NewFunction(name, code string) (*Function, error) {
 	function, err := NewEmptyFunction()
 	if err != nil {
 		return nil, err
 	}
+	function.Name = name
 	function.Code = code
 	return function, nil
 }

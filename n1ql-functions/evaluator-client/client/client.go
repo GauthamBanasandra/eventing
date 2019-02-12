@@ -3,6 +3,7 @@ package client
 import (
 	"errors"
 
+	"fmt"
 	"github.com/couchbase/eventing/gen/nftp/client"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/adapter"
 	"github.com/couchbase/eventing/n1ql-functions/evaluator-client/babysitter"
@@ -15,18 +16,20 @@ type EvaluatorClient struct {
 	Babysitter         *babysitter.Babysitter
 	NotificationServer *notificationServer
 
-	evaluators chan *evaluator.Evaluator // TODO : Turn this into a channel
-	scheduler  *Scheduler
-	storage    *storage.Storage
-	appServer  *server.Server
-	config     *adapter.Configuration
+	evaluators      chan *evaluator.Evaluator
+	scheduler       *Scheduler
+	storage         *storage.Storage
+	appServer       *server.Server
+	config          *adapter.Configuration
+	libraryFunction map[string]*adapter.Function
 }
 
 func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error) {
 	evaluatorInstance := &EvaluatorClient{
-		config:     config,
-		evaluators: make(chan *evaluator.Evaluator, config.WorkersPerNode),
-		scheduler:  NewScheduler(config),
+		config:          config,
+		evaluators:      make(chan *evaluator.Evaluator, config.WorkersPerNode),
+		scheduler:       NewScheduler(config),
+		libraryFunction: make(map[string]*adapter.Function),
 	}
 	if err := evaluatorInstance.spawnComponents(); err != nil {
 		return nil, err
@@ -120,6 +123,8 @@ func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
 		}
 	}()
 
+	e.libraryFunction[f.Name] = f
+
 	for i := uint32(0); i < e.config.WorkersPerNode; i++ {
 		evaluatorInstance := <-e.evaluators
 		err := evaluatorInstance.AddFunction(f)
@@ -131,15 +136,19 @@ func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
 	return nil
 }
 
-func (e *EvaluatorClient) Evaluate(f *adapter.Function) (*string, error) {
+func (e *EvaluatorClient) Evaluate(libraryName, functionName string) (*string, error) {
 	res := <-e.scheduler.Resources
 	defer func() {
 		e.scheduler.Resources <- res
 	}()
 
+	function, exists := e.libraryFunction[libraryName]
+	if !exists {
+		return nil, fmt.Errorf("%s does not exist", libraryName)
+	}
 	return res.evaluatorInstance.Evaluate(&nftp.EvaluateRequest{
-		FunctionID:   f.ID,
-		FunctionName: "f",
+		FunctionID:   function.ID,
+		FunctionName: functionName,
 		ThreadID:     res.threadID,
 	})
 }
