@@ -19,17 +19,17 @@ func (s *Server) functionsHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "POST":
-		function, err := adapter.NewEmptyFunction()
+		library, err := adapter.NewEmptyLibrary()
 		if err != nil {
 			log.Printf("error in creating empty function : %v", err)
 			return
 		}
-		err = json.Unmarshal(body, function)
+		err = json.Unmarshal(body, library)
 		if err != nil {
 			log.Printf("error in unmarshalling json : %v", err)
 			return
 		}
-		err = s.storage.AddFunction(function)
+		err = s.storage.AddLibrary(library)
 		if err != nil {
 			log.Printf("error in writing to metakv, err : %v", err)
 		}

@@ -7,34 +7,34 @@ import (
 
 // TODO : Rename this to Library
 
-type Function struct {
+type Library struct {
 	Name string `json:"name"`
 	ID   string `json:"id"`
 	Code string `json:"code"`
 }
 
-func NewEmptyFunction() (*Function, error) {
+func NewEmptyLibrary() (*Library, error) {
 	uuidGen, err := util.NewUUID()
 	if err != nil {
 		return nil, err
 	}
-	return &Function{
+	return &Library{
 		ID: uuidGen.Str(),
 	}, nil
 }
 
-func NewFunction(name, code string) (*Function, error) {
-	function, err := NewEmptyFunction()
+func NewLibrary(name, code string) (*Library, error) {
+	library, err := NewEmptyLibrary()
 	if err != nil {
 		return nil, err
 	}
-	function.Name = name
-	function.Code = code
-	return function, nil
+	library.Name = name
+	library.Code = code
+	return library, nil
 }
 
-func (f *Function) ToNFTP() *nftp.Function {
-	return &nftp.Function{
+func (f *Library) ToNFTP() *nftp.Library {
+	return &nftp.Library{
 		ID:   f.ID,
 		Code: f.Code,
 	}

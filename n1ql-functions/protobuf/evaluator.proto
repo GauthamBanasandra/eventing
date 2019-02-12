@@ -22,7 +22,7 @@ message Port {
     uint32 Port = 2;
 }
 
-message Function {
+message Library {
     string ID = 1;
     string Code = 2;
 }
@@ -33,7 +33,7 @@ message Log {
 }
 
 message EvaluateRequest {
-    string FunctionID = 1;
+    string LibraryID = 1;
     string FunctionName = 2;
     string ThreadID = 3;
 }
@@ -45,7 +45,7 @@ service Notification {
 
 service Evaluator {
     rpc Initialize (Config) returns (Info);
-    rpc AddFunction (Function) returns (Info);
+    rpc AddLibrary (Library) returns (Info);
     rpc Evaluate (EvaluateRequest) returns (Info);
     rpc Stop (Void) returns (Void);
 }

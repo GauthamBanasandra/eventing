@@ -7,7 +7,7 @@
 #include "evaluator.h"
 #include "utils.h"
 
-Info RuntimeBundle::AddFunction(const Function &function) {
+Info RuntimeBundle::AddLibrary(const Library &library) {
   v8::Locker locker(isolate);
   v8::Isolate::Scope isolate_scope(isolate);
   v8::HandleScope handle_scope(isolate);
@@ -15,7 +15,7 @@ Info RuntimeBundle::AddFunction(const Function &function) {
   v8::Context::Scope context_scope(context);
 
   v8::Local<v8::String> source;
-  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate, function.code.c_str(),
+  if (!TO_LOCAL(v8::String::NewFromUtf8(isolate, library.code.c_str(),
                                         v8::NewStringType::kNormal),
                 &source)) {
     return {true, "Unable to create source string"};
@@ -34,7 +34,7 @@ Info RuntimeBundle::AddFunction(const Function &function) {
     }
     return {true, "Unable to run script"};
   }
-  contexts[function.id].Reset(isolate, context);
+  contexts[library.id].Reset(isolate, context);
   return {false};
 }
 
@@ -74,14 +74,14 @@ Evaluator::~Evaluator() {
   delete isolate_params_.array_buffer_allocator;
 }
 
-Info Evaluator::AddFunction(const Function &function) {
-  auto info = Compile(function.code);
+Info Evaluator::AddLibrary(const Library &library) {
+  auto info = Compile(library.code);
   if (info.is_fatal) {
     return info;
   }
 
   for (auto &runtime : runtimes_) {
-    info = runtime.second.AddFunction(function);
+    info = runtime.second.AddLibrary(library);
     if (info.is_fatal) {
       return info;
     }
@@ -101,7 +101,7 @@ Info Evaluator::Evaluate(const EvaluateRequest &request) {
   v8::Locker locker(isolate);
   v8::Isolate::Scope isolate_scope(isolate);
   v8::HandleScope handle_scope(isolate);
-  auto context = runtime.contexts[request.function_id].Get(isolate);
+  auto context = runtime.contexts[request.library_id].Get(isolate);
   v8::Context::Scope context_scope(context);
 
   auto global = context->Global();

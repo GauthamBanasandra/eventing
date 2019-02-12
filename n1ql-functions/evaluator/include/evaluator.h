@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "constants.h"
-#include "function.h"
+#include "library.h"
 #include "info.h"
 #include "notification-client.h"
 
@@ -21,10 +21,10 @@ using ThreadID = std::string;
 struct RuntimeBundle {
   ~RuntimeBundle();
 
-  Info AddFunction(const Function &function);
+  Info AddLibrary(const Library &library);
 
   v8::Isolate *isolate;
-  std::unordered_map<FunctionID, v8::Persistent<v8::Context>> contexts;
+  std::unordered_map<LibraryID, v8::Persistent<v8::Context>> contexts;
 };
 
 class Evaluator {
@@ -33,7 +33,7 @@ public:
                      NotificationClient &notification_client);
   virtual ~Evaluator();
 
-  Info AddFunction(const Function &function);
+  Info AddLibrary(const Library &library);
   Info Evaluate(const EvaluateRequest &request);
 
 private:

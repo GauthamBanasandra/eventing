@@ -28,7 +28,7 @@ func main() {
 			let value = 2 + 2;
 			return value;
 		}`
-	f, err := adapter.NewFunction("another-math", code)
+	f, err := adapter.NewLibrary("another-math", code)
 	if err != nil {
 		log.Fatalf("Unable to create Function, err : %v", err)
 	}
@@ -48,7 +48,7 @@ func main() {
 			return
 
 		case "add":
-			if err := evaluatorClient.AddFunction(f); err != nil {
+			if err := evaluatorClient.AddLibrary(f); err != nil {
 				log.Fatalf("Unable to add Function, err : %v", err)
 			}
 

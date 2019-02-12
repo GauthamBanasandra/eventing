@@ -9,23 +9,23 @@
 
 #include "evaluator.pb.h"
 
-using FunctionID = std::string;
+using LibraryID = std::string;
 
-struct Function {
-  Function(const nftp::Function *function)
-      : id(function->id()), code(function->code()) {}
+struct Library {
+  Library(const nftp::Library *library)
+      : id(library->id()), code(library->code()) {}
 
-  FunctionID id;
+  LibraryID id;
   std::string code;
 };
 
 struct EvaluateRequest {
   EvaluateRequest(const nftp::EvaluateRequest *request)
-      : function_id(request->functionid()),
+      : library_id(request->libraryid()),
         function_name(request->functionname()), thread_id(request->threadid()) {
   }
 
-  std::string function_id;
+  LibraryID library_id;
   std::string function_name;
   std::string thread_id;
 };

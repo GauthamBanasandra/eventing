@@ -48,10 +48,10 @@ void EvaluatorServer::Run(const std::string &hostname) {
   server_->Wait();
 }
 
-grpc::Status EvaluatorServer::AddFunction(grpc::ServerContext *context,
-                                          const nftp::Function *request,
-                                          nftp::Info *response) {
-  auto info = evaluator_.AddFunction({request});
+grpc::Status EvaluatorServer::AddLibrary(grpc::ServerContext *context,
+                                         const nftp::Library *request,
+                                         nftp::Info *response) {
+  auto info = evaluator_.AddLibrary({request});
   response->set_isfatal(info.is_fatal);
   response->set_message(info.msg);
   return grpc::Status::OK;

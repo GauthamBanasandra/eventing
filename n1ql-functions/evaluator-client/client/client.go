@@ -16,20 +16,20 @@ type EvaluatorClient struct {
 	Babysitter         *babysitter.Babysitter
 	NotificationServer *notificationServer
 
-	evaluators      chan *evaluator.Evaluator
-	scheduler       *Scheduler
-	storage         *storage.Storage
-	appServer       *server.Server
-	config          *adapter.Configuration
-	libraryFunction map[string]*adapter.Function
+	evaluators chan *evaluator.Evaluator
+	scheduler  *Scheduler
+	storage    *storage.Storage
+	appServer  *server.Server
+	config     *adapter.Configuration
+	libraries  map[string]*adapter.Library
 }
 
 func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error) {
 	evaluatorInstance := &EvaluatorClient{
-		config:          config,
-		evaluators:      make(chan *evaluator.Evaluator, config.WorkersPerNode),
-		scheduler:       NewScheduler(config),
-		libraryFunction: make(map[string]*adapter.Function),
+		config:     config,
+		evaluators: make(chan *evaluator.Evaluator, config.WorkersPerNode),
+		scheduler:  NewScheduler(config),
+		libraries:  make(map[string]*adapter.Library),
 	}
 	if err := evaluatorInstance.spawnComponents(); err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (e *EvaluatorClient) spawnComponents() error {
 	if err != nil {
 		return err
 	}
-	e.storage = storage.New(e.AddFunction)
+	e.storage = storage.New(e.AddLibrary)
 	return nil
 }
 
@@ -115,7 +115,7 @@ func (e *EvaluatorClient) Destroy() error {
 	return nil
 }
 
-func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
+func (e *EvaluatorClient) AddLibrary(f *adapter.Library) error {
 	var evaluators []*evaluator.Evaluator
 	defer func() {
 		for i := 0; i < len(evaluators); i++ {
@@ -123,11 +123,11 @@ func (e *EvaluatorClient) AddFunction(f *adapter.Function) error {
 		}
 	}()
 
-	e.libraryFunction[f.Name] = f
+	e.libraries[f.Name] = f
 
 	for i := uint32(0); i < e.config.WorkersPerNode; i++ {
 		evaluatorInstance := <-e.evaluators
-		err := evaluatorInstance.AddFunction(f)
+		err := evaluatorInstance.AddLibrary(f)
 		evaluators = append(evaluators, evaluatorInstance)
 		if err != nil {
 			return err
@@ -142,12 +142,12 @@ func (e *EvaluatorClient) Evaluate(libraryName, functionName string) (*string, e
 		e.scheduler.Resources <- res
 	}()
 
-	function, exists := e.libraryFunction[libraryName]
+	library, exists := e.libraries[libraryName]
 	if !exists {
 		return nil, fmt.Errorf("%s does not exist", libraryName)
 	}
 	return res.evaluatorInstance.Evaluate(&nftp.EvaluateRequest{
-		FunctionID:   function.ID,
+		LibraryID:    library.ID,
 		FunctionName: functionName,
 		ThreadID:     res.threadID,
 	})

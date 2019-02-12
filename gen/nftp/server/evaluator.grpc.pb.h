@@ -224,12 +224,12 @@ class Evaluator final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>> PrepareAsyncInitialize(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>>(PrepareAsyncInitializeRaw(context, request, cq));
     }
-    virtual ::grpc::Status AddFunction(::grpc::ClientContext* context, const ::nftp::Function& request, ::nftp::Info* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>> AsyncAddFunction(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>>(AsyncAddFunctionRaw(context, request, cq));
+    virtual ::grpc::Status AddLibrary(::grpc::ClientContext* context, const ::nftp::Library& request, ::nftp::Info* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>> AsyncAddLibrary(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>>(AsyncAddLibraryRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>> PrepareAsyncAddFunction(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>>(PrepareAsyncAddFunctionRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>> PrepareAsyncAddLibrary(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>>(PrepareAsyncAddLibraryRaw(context, request, cq));
     }
     virtual ::grpc::Status Evaluate(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::nftp::Info* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>> AsyncEvaluate(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::grpc::CompletionQueue* cq) {
@@ -248,8 +248,8 @@ class Evaluator final {
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* AsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* PrepareAsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* AsyncAddFunctionRaw(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* PrepareAsyncAddFunctionRaw(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* AsyncAddLibraryRaw(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* PrepareAsyncAddLibraryRaw(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* AsyncEvaluateRaw(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Info>* PrepareAsyncEvaluateRaw(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::nftp::Void>* AsyncStopRaw(::grpc::ClientContext* context, const ::nftp::Void& request, ::grpc::CompletionQueue* cq) = 0;
@@ -265,12 +265,12 @@ class Evaluator final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>> PrepareAsyncInitialize(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>>(PrepareAsyncInitializeRaw(context, request, cq));
     }
-    ::grpc::Status AddFunction(::grpc::ClientContext* context, const ::nftp::Function& request, ::nftp::Info* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>> AsyncAddFunction(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>>(AsyncAddFunctionRaw(context, request, cq));
+    ::grpc::Status AddLibrary(::grpc::ClientContext* context, const ::nftp::Library& request, ::nftp::Info* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>> AsyncAddLibrary(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>>(AsyncAddLibraryRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>> PrepareAsyncAddFunction(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>>(PrepareAsyncAddFunctionRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>> PrepareAsyncAddLibrary(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>>(PrepareAsyncAddLibraryRaw(context, request, cq));
     }
     ::grpc::Status Evaluate(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::nftp::Info* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::nftp::Info>> AsyncEvaluate(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::grpc::CompletionQueue* cq) {
@@ -291,14 +291,14 @@ class Evaluator final {
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     ::grpc::ClientAsyncResponseReader< ::nftp::Info>* AsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::nftp::Info>* PrepareAsyncInitializeRaw(::grpc::ClientContext* context, const ::nftp::Config& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::nftp::Info>* AsyncAddFunctionRaw(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::nftp::Info>* PrepareAsyncAddFunctionRaw(::grpc::ClientContext* context, const ::nftp::Function& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::nftp::Info>* AsyncAddLibraryRaw(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::nftp::Info>* PrepareAsyncAddLibraryRaw(::grpc::ClientContext* context, const ::nftp::Library& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::nftp::Info>* AsyncEvaluateRaw(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::nftp::Info>* PrepareAsyncEvaluateRaw(::grpc::ClientContext* context, const ::nftp::EvaluateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::nftp::Void>* AsyncStopRaw(::grpc::ClientContext* context, const ::nftp::Void& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::nftp::Void>* PrepareAsyncStopRaw(::grpc::ClientContext* context, const ::nftp::Void& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_Initialize_;
-    const ::grpc::internal::RpcMethod rpcmethod_AddFunction_;
+    const ::grpc::internal::RpcMethod rpcmethod_AddLibrary_;
     const ::grpc::internal::RpcMethod rpcmethod_Evaluate_;
     const ::grpc::internal::RpcMethod rpcmethod_Stop_;
   };
@@ -309,7 +309,7 @@ class Evaluator final {
     Service();
     virtual ~Service();
     virtual ::grpc::Status Initialize(::grpc::ServerContext* context, const ::nftp::Config* request, ::nftp::Info* response);
-    virtual ::grpc::Status AddFunction(::grpc::ServerContext* context, const ::nftp::Function* request, ::nftp::Info* response);
+    virtual ::grpc::Status AddLibrary(::grpc::ServerContext* context, const ::nftp::Library* request, ::nftp::Info* response);
     virtual ::grpc::Status Evaluate(::grpc::ServerContext* context, const ::nftp::EvaluateRequest* request, ::nftp::Info* response);
     virtual ::grpc::Status Stop(::grpc::ServerContext* context, const ::nftp::Void* request, ::nftp::Void* response);
   };
@@ -334,22 +334,22 @@ class Evaluator final {
     }
   };
   template <class BaseClass>
-  class WithAsyncMethod_AddFunction : public BaseClass {
+  class WithAsyncMethod_AddLibrary : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithAsyncMethod_AddFunction() {
+    WithAsyncMethod_AddLibrary() {
       ::grpc::Service::MarkMethodAsync(1);
     }
-    ~WithAsyncMethod_AddFunction() override {
+    ~WithAsyncMethod_AddLibrary() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status AddFunction(::grpc::ServerContext* context, const ::nftp::Function* request, ::nftp::Info* response) final override {
+    ::grpc::Status AddLibrary(::grpc::ServerContext* context, const ::nftp::Library* request, ::nftp::Info* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestAddFunction(::grpc::ServerContext* context, ::nftp::Function* request, ::grpc::ServerAsyncResponseWriter< ::nftp::Info>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestAddLibrary(::grpc::ServerContext* context, ::nftp::Library* request, ::grpc::ServerAsyncResponseWriter< ::nftp::Info>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -393,7 +393,7 @@ class Evaluator final {
       ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_Initialize<WithAsyncMethod_AddFunction<WithAsyncMethod_Evaluate<WithAsyncMethod_Stop<Service > > > > AsyncService;
+  typedef WithAsyncMethod_Initialize<WithAsyncMethod_AddLibrary<WithAsyncMethod_Evaluate<WithAsyncMethod_Stop<Service > > > > AsyncService;
   template <class BaseClass>
   class WithGenericMethod_Initialize : public BaseClass {
    private:
@@ -412,18 +412,18 @@ class Evaluator final {
     }
   };
   template <class BaseClass>
-  class WithGenericMethod_AddFunction : public BaseClass {
+  class WithGenericMethod_AddLibrary : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithGenericMethod_AddFunction() {
+    WithGenericMethod_AddLibrary() {
       ::grpc::Service::MarkMethodGeneric(1);
     }
-    ~WithGenericMethod_AddFunction() override {
+    ~WithGenericMethod_AddLibrary() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status AddFunction(::grpc::ServerContext* context, const ::nftp::Function* request, ::nftp::Info* response) final override {
+    ::grpc::Status AddLibrary(::grpc::ServerContext* context, const ::nftp::Library* request, ::nftp::Info* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -483,24 +483,24 @@ class Evaluator final {
     virtual ::grpc::Status StreamedInitialize(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::nftp::Config,::nftp::Info>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
-  class WithStreamedUnaryMethod_AddFunction : public BaseClass {
+  class WithStreamedUnaryMethod_AddLibrary : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    WithStreamedUnaryMethod_AddFunction() {
+    WithStreamedUnaryMethod_AddLibrary() {
       ::grpc::Service::MarkMethodStreamed(1,
-        new ::grpc::internal::StreamedUnaryHandler< ::nftp::Function, ::nftp::Info>(std::bind(&WithStreamedUnaryMethod_AddFunction<BaseClass>::StreamedAddFunction, this, std::placeholders::_1, std::placeholders::_2)));
+        new ::grpc::internal::StreamedUnaryHandler< ::nftp::Library, ::nftp::Info>(std::bind(&WithStreamedUnaryMethod_AddLibrary<BaseClass>::StreamedAddLibrary, this, std::placeholders::_1, std::placeholders::_2)));
     }
-    ~WithStreamedUnaryMethod_AddFunction() override {
+    ~WithStreamedUnaryMethod_AddLibrary() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status AddFunction(::grpc::ServerContext* context, const ::nftp::Function* request, ::nftp::Info* response) final override {
+    ::grpc::Status AddLibrary(::grpc::ServerContext* context, const ::nftp::Library* request, ::nftp::Info* response) final override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedAddFunction(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::nftp::Function,::nftp::Info>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedAddLibrary(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::nftp::Library,::nftp::Info>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_Evaluate : public BaseClass {
@@ -542,9 +542,9 @@ class Evaluator final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedStop(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::nftp::Void,::nftp::Void>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_Initialize<WithStreamedUnaryMethod_AddFunction<WithStreamedUnaryMethod_Evaluate<WithStreamedUnaryMethod_Stop<Service > > > > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_Initialize<WithStreamedUnaryMethod_AddLibrary<WithStreamedUnaryMethod_Evaluate<WithStreamedUnaryMethod_Stop<Service > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_Initialize<WithStreamedUnaryMethod_AddFunction<WithStreamedUnaryMethod_Evaluate<WithStreamedUnaryMethod_Stop<Service > > > > StreamedService;
+  typedef WithStreamedUnaryMethod_Initialize<WithStreamedUnaryMethod_AddLibrary<WithStreamedUnaryMethod_Evaluate<WithStreamedUnaryMethod_Stop<Service > > > > StreamedService;
 };
 
 }  // namespace nftp

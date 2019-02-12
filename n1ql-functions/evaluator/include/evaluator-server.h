@@ -20,13 +20,14 @@ public:
   grpc::Status Initialize(grpc::ServerContext *context,
                           const nftp::Config *request,
                           nftp::Info *response) override;
-  grpc::Status AddFunction(grpc::ServerContext *context,
-                           const nftp::Function *request,
-                           nftp::Info *response) override;
+  grpc::Status AddLibrary(grpc::ServerContext *context,
+                          const nftp::Library *request,
+                          nftp::Info *response) override;
   grpc::Status Evaluate(grpc::ServerContext *context,
                         const nftp::EvaluateRequest *request,
                         nftp::Info *response) override;
-  grpc::Status Stop(grpc::ServerContext *context, const nftp::Void *request, nftp::Void *response) override;
+  grpc::Status Stop(grpc::ServerContext *context, const nftp::Void *request,
+                    nftp::Void *response) override;
 
   void Run(const std::string &hostname);
 

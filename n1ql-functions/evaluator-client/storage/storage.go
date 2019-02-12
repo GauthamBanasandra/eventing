@@ -14,13 +14,13 @@ const (
 )
 
 type Storage struct {
-	addFunction  func(function *adapter.Function) error
+	addLibrary   func(function *adapter.Library) error
 	stopObserver chan struct{}
 }
 
-func New(addFunction func(function *adapter.Function) error) *Storage {
+func New(addLibrary func(library *adapter.Library) error) *Storage {
 	s := &Storage{
-		addFunction:  addFunction,
+		addLibrary:  addLibrary,
 		stopObserver: make(chan struct{}),
 	}
 	s.observeFunctionsPath()
@@ -31,13 +31,13 @@ func (s *Storage) Stop() {
 	s.stopObserver <- struct{}{}
 }
 
-func (s *Storage) AddFunction(function *adapter.Function) error {
-	data, err := json.Marshal(function)
+func (s *Storage) AddLibrary(library *adapter.Library) error {
+	data, err := json.Marshal(library)
 	if err != nil {
 		return err
 	}
 
-	err = metakv.Set(FunctionsPath+function.Name, data, nil)
+	err = metakv.Set(FunctionsPath+ library.Name, data, nil)
 	if err != nil {
 		return err
 	}
@@ -65,12 +65,12 @@ func (s *Storage) handleFunctionsPath(path string, value []byte, rev interface{}
 		return nil
 	}
 
-	function := &adapter.Function{}
-	err := json.Unmarshal(value, function)
+	library := &adapter.Library{}
+	err := json.Unmarshal(value, library)
 	if err != nil {
 		return err
 	}
-	err = s.addFunction(function)
+	err = s.addLibrary(library)
 	if err != nil {
 		return err
 	}

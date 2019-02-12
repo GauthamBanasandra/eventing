@@ -43,8 +43,8 @@ func (e *Evaluator) Destroy() error {
 	return nil
 }
 
-func (e *Evaluator) AddFunction(function *adapter.Function) error {
-	info, err := e.client.AddFunction(context.Background(), function.ToNFTP())
+func (e *Evaluator) AddLibrary(library *adapter.Library) error {
+	info, err := e.client.AddLibrary(context.Background(), library.ToNFTP())
 	if err != nil {
 		return err
 	}
