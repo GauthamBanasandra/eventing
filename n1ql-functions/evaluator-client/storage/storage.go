@@ -20,7 +20,7 @@ type Storage struct {
 
 func New(addLibrary func(library *adapter.Library) error) *Storage {
 	s := &Storage{
-		addLibrary:  addLibrary,
+		addLibrary:   addLibrary,
 		stopObserver: make(chan struct{}),
 	}
 	s.observeFunctionsPath()
@@ -37,7 +37,7 @@ func (s *Storage) AddLibrary(library *adapter.Library) error {
 		return err
 	}
 
-	err = metakv.Set(FunctionsPath+ library.Name, data, nil)
+	err = metakv.Set(FunctionsPath+library.Name, data, nil)
 	if err != nil {
 		return err
 	}

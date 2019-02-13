@@ -17,8 +17,8 @@ func NewServer(hostAddress string, storageInstance *storage.Storage) *Server {
 		server:  &http.Server{Addr: hostAddress},
 		storage: storageInstance,
 	}
-	http.HandleFunc("/api/v1/functions", s.functionsHandler)
-	http.HandleFunc("/api/v1/functions/", s.functionsHandler)
+	http.HandleFunc("/api/v1/functions", s.librariesHandler)
+	http.HandleFunc("/api/v1/functions/", s.librariesHandler)
 	return s
 }
 

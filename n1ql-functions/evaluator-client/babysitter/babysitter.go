@@ -65,3 +65,5 @@ func generateUUID(qty uint32) ([]string, error) {
 	}
 	return uuids, nil
 }
+
+// TODO : Monitor process and spawn it back up if it crashes

@@ -61,3 +61,5 @@ ADD_EXECUTABLE(evaluator
 TARGET_LINK_LIBRARIES(evaluator
         ${LIB_GRPC}
         ${V8_LIBRARIES})
+
+INSTALL(TARGETS evaluator RUNTIME DESTINATION bin)

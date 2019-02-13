@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -10,7 +9,7 @@ import (
 	"io/ioutil"
 )
 
-func (s *Server) functionsHandler(w http.ResponseWriter, r *http.Request) {
+func (s *Server) librariesHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Printf("error in reading body : %v", err)
@@ -33,6 +32,11 @@ func (s *Server) functionsHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("error in writing to metakv, err : %v", err)
 		}
+
+	case "GET":
+		// TODO : Handle retrieval of Libraries
+
+	case "DELETE":
+		// TODO : Handle deletion of Libraries
 	}
-	fmt.Fprint(w, "Hello")
 }

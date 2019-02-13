@@ -38,6 +38,8 @@ func NewEvaluatorClient(config *adapter.Configuration) (*EvaluatorClient, error)
 		return nil, err
 	}
 	evaluatorInstance.spawnAppServer()
+	// TODO : Need to wait till the evaluators have been spawned
+	// for all of existing libraries
 	return evaluatorInstance, nil
 }
 
@@ -101,6 +103,8 @@ func (e *EvaluatorClient) spawnEvaluators() error {
 
 // TODO : This isn't robust. If the first one succeeds and second one fails,
 // the second one will never succeed upon calling Destroy() again
+// TODO : There's a problem with this. evaluator processes are not ending and
+// are turning into zombies
 func (e *EvaluatorClient) Destroy() error {
 	if err := e.appServer.Stop(); err != nil {
 		return err
