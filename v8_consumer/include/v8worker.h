@@ -91,12 +91,12 @@ typedef struct message_s {
 } message_t;
 
 // Struct to contain flatbuffer decoded message from Go world
-typedef struct worker_msg_s {
-  std::size_t GetSize() const { return header->GetSize() + payload->GetSize(); }
+struct WorkerMessage {
+  std::size_t GetSize() const { return header.GetSize() + payload.GetSize(); }
 
-  header_t *header;
-  message_t *payload;
-} worker_msg_t;
+  header_t header;
+  message_t payload;
+};
 
 typedef struct server_settings_s {
   int checkpoint_interval;
@@ -216,7 +216,7 @@ public:
   bool DebugExecute(const char *func_name, v8::Local<v8::Value> *args,
                     int args_len);
 
-  void Enqueue(header_t *header, message_t *payload);
+  void Enqueue(std::unique_ptr<WorkerMessage> worker_msg);
 
   void AddLcbException(int err_code);
   void ListLcbExceptions(std::map<int, int64_t> &agg_lcb_exceptions);
@@ -270,8 +270,8 @@ public:
 
   std::thread processing_thr_;
   std::thread *terminator_thr_;
-  Queue<timer_msg_t> *timer_queue_;
-  Queue<worker_msg_t> *worker_queue_;
+  Queue<std::unique_ptr<timer_msg_t>> *timer_queue_;
+  Queue<std::unique_ptr<WorkerMessage>> *worker_queue_;
 
   ConnectionPool *conn_pool_;
 
